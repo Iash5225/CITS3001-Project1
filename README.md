@@ -1,4 +1,10 @@
 # Project1
-CITS3001 Project 1
+An AI framework for playing a 4 team political warfare game, as part of the CITS3001 unit at UWA
 
-test commit by J-P
+Author:
+- JP
+- Iash
+
+## Rules
+
+## Getting started

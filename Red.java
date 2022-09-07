@@ -1,9 +1,6 @@
-public class Red {
-    public int id;
-    public Red (int id){
-        this.id = id;
+public class Red extends GameObject {
+    public Red (){
+        super();
     }
-    public int getId() {
-        return id;
-    }
+
 }

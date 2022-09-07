@@ -1,13 +1,9 @@
-public class Grey {
-    public int id;
+public class Grey extends GameObject {
     public boolean isSpy;
 
-    public Grey(int id, boolean isSpy){
-        this.id = id;
+    public Grey(boolean isSpy){
+        super();
         this.isSpy = isSpy;
-    }
-    public int getId() {
-        return id;
     }
 
     public boolean SpyorNot() {

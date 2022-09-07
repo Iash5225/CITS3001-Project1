@@ -7,8 +7,9 @@ public class Green extends GameObject {
     boolean followsRed;
     Vector<Green> friends;
 
-    public Green(int id, boolean willVote, boolean followsRed) {
+    public Green(double uncertainty, boolean willVote, boolean followsRed) {
         super();
+        this.uncertainty = uncertainty;
         this.willVote = willVote;
         this.followsRed = followsRed;
         friends = new Vector<Green>();
@@ -26,7 +27,7 @@ public class Green extends GameObject {
     public void update() {
         uncertainty += du;
         du = 0;
-        if (Math.random() < (uncertainty + 1) / 2) {
+        if (Math.random() < uncertainty) {
             willVote = !willVote;
         }
     }

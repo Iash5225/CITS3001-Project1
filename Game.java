@@ -44,4 +44,6 @@ public class Game {
     public double getPercentage_vote() {
         return percentage_vote;
     }
+
+
 }

@@ -19,4 +19,43 @@ public class Game {
         }
     }
 
+    public void update() {
+        for (Green g : greens) {
+            g.calcNewUncertainty();
+        }
+        for (Green g : greens) {
+            g.update();
+        }
+    }
+
+    public int getVoteCount() {
+        int count = 0;
+        for (Green g : greens) {
+            if (g.willVote) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        Game game = new Game(100, 0.1, 0, 0, 0, 0.9, 0.2);
+        System.out.println("Initial vote count: " + game.getVoteCount());
+        System.out.println("Initial Green Graph:");
+        for (Green g : game.greens) {
+            System.out.print(g.id);
+            System.out.print(": [");
+            for (Green g2 : g.friends) {
+                System.out.print(g2.id);
+                System.out.print(" ");
+            }
+            System.out.println("]");
+        }
+        System.out.println("Running simulation...");
+        for (int i = 0; i < 50; i++) {
+            game.update();
+            System.out.println(game.getVoteCount());
+        }
+    }
+
 }

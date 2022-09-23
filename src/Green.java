@@ -21,7 +21,7 @@ public class Green extends GameObject {
             sum += g.uncertainty;
         }
         double avg = sum / friends.size();
-        du = avg - uncertainty;
+        du = (avg - uncertainty) / 2;
     }
 
     public void update() {

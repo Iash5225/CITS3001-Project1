@@ -62,10 +62,29 @@ public class Game {
         else{
             //blue can take its turn, without losing a lifeline.
             //add blue turn here
+            // either interacts with green
+
+            Blue_interracting_with_green();
+
 
             //added this line -- just so I can remember that blues looses 0 energy
             bluenode.LoseEnergy(0);
 
+        }
+    }
+
+/**
+     * if blue is a spy, it can act like a red agent without losing followers
+     * if it is an ally of grey, grey can take its turn, without losing a lifeline.
+     *
+     */
+    public void Blue_interracting_with_green(){
+
+        for (Green g : greens) {
+            //need to discuss what exactly blue can do with green
+            if (g.followsRed) {
+                g.calcNewUncertainty();
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ public class Red extends GameObject {
         levelofMessage = 0;
     }
 
-    public void setLevelofMessage(int levelofMessage) throws Exception {
+    public void setLevelofMessage(int levelofMessage) {
         this.levelofMessage = levelofMessage; //work on that
         System.out.println("Red is sending a level " + levelofMessage + "message");
 

@@ -1,3 +1,5 @@
+package src;
+
 public class Blue extends GameObject {
 
     public double energy;

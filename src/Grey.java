@@ -1,3 +1,5 @@
+//package src;
+
 public class Grey extends GameObject {
     public boolean isSpy;
 
@@ -9,4 +11,6 @@ public class Grey extends GameObject {
     public boolean SpyorNot() {
         return isSpy;
     }
+
+
 }

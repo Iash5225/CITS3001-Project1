@@ -1,5 +1,3 @@
-//package src;
-
 public class GameObject {
     private static int count = 0;
 

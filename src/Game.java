@@ -1,90 +1,178 @@
-//package src;
-
 import java.util.*;
 
 public class Game {
     public Vector<Green> greens;
-    public Red rednode;
-    public Grey greynode;
-    public Blue bluenode;
+    public Red red;
+    public Vector<Grey> greys;
+    public Blue blue;
 
+    public int n_rounds;
+    public int current_round;
+    public boolean is_blues_turn;
+
+    /**
+     * Creates a new game with the given parameters.
+     * 
+     * @param n_green
+     * @param prob_edge
+     * @param n_grey
+     * @param prob_spy
+     * @param uncertainty_lb
+     * @param uncertainty_ub
+     * @param percentage_vote
+     * 
+     * @return Game object
+     */
     public Game(int n_green, double prob_edge, int n_grey, double prob_spy, double uncertainty_lb,
-                double uncertainty_ub, double percentage_vote) {
+            double uncertainty_ub, double percentage_vote) {
+
+        // create n_green greens with parameters
         greens = new Vector<Green>();
         for (int i = 0; i < n_green; i++) {
             double uncertainty = uncertainty_lb + Math.random() * (uncertainty_ub - uncertainty_lb);
             boolean willVote = Math.random() < percentage_vote;
             greens.add(new Green(uncertainty, willVote, true));
         }
+
+        // join greens with probability prob_edge
         for (Green g : greens) {
             for (Green g2 : greens) {
-                if ( g != g2 && Math.random() < prob_edge ){
+                if (g != g2 && Math.random() < prob_edge) {
                     g.friends.add(g2);
                 }
             }
         }
+
+        // create n_grey greys with parameters
+        greys = new Vector<Grey>();
+        for (int i = 0; i < n_grey; i++) {
+            boolean isSpy = Math.random() < prob_spy;
+            greys.add(new Grey(isSpy));
+        }
+
+        // create red and blue
+        red = new Red();
+        blue = new Blue(100);
+
+        // set current round to 0
+        current_round = 0;
+        is_blues_turn = false;
+
+        // set number of rounds to 10
+        n_rounds = 10;
     }
 
     /**
-     * @param rednode the red node
-     *                1: send level 1 message - 10% of the greens will vote
-     *                2: send level 2 message - 20% of the greens will vote
-     *                3: send level 3 message - 30% of the greens will vote
-     *                4: send level 4 message - 40% of the greens will vote
-     *                5: send level 5 message - 50% of the greens will vote
+     * Prints the greens in the game.
      */
-    public void InfluenceGreen(Red rednode) {
-        double percentage_vote = 0.1 * rednode.levelofMessage;
+    public void printGreens() {
+        // set color to green
+        System.out.print("\033[0;32m");
+        System.out.println("Greens:");
+        // reset color
+        System.out.print("\033[0m");
         for (Green g : greens) {
-            if ( g.uncertainty + percentage_vote < 1 ){
-                g.uncertainty = g.uncertainty + percentage_vote;
+            g.print();
+        }
+
+    }
+
+    /**
+     * Next round of the game.
+     */
+    public void nextRound() {
+        current_round++;
+        System.out.println("=========================================");
+        System.out.println("Round " + current_round);
+        while (!is_blues_turn) {
+            // red's turn
+            System.out.println("===================================");
+            // change print color to red
+            System.out.print("\033[0;31m");
+
+            System.out.println("Red's turn");
+
+            // reset the print color
+            System.out.print("\033[0m");
+
+            System.out.println("Red's options:");
+            System.out.println("(1) Send a message");
+            System.out.println("(2) Do nothing");
+            System.out.print("Enter your choice: ");
+            Scanner sc = new Scanner(System.in);
+            int choice = sc.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the message level from 1-5: ");
+
+                    int level = sc.nextInt();
+                    red.setLevelofMessage(level);
+                    System.out.println("TODO: send message from red");
+                    is_blues_turn = true;
+                    break;
+                case 2:
+                    System.out.println("Red does nothing");
+                    is_blues_turn = true;
+                    break;
+                default:
+                    System.out.println("Invalid choice, try again");
+                    break;
+            }
+        }
+
+        while (is_blues_turn) {
+            // blue's turn
+            System.out.println("===================================");
+            // change print color to blue
+            System.out.print("\033[0;34m");
+            System.out.println("Blue's turn");
+            // reset the print color
+            System.out.print("\033[0m");
+            System.out.println("Blue's energy: " + blue.getEnergy());
+            System.out.println("Blue's options:");
+            System.out.println("(1) Send a message");
+            System.out.println("(2) Add a grey");
+            System.out.println("(3) Do nothing");
+            System.out.print("Enter your choice: ");
+            Scanner sc = new Scanner(System.in);
+            int choice = sc.nextInt();
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter the message level from 1-5: ");
+                    int level = sc.nextInt();
+                    System.out.println("TODO: send message from blue");
+                    is_blues_turn = false;
+                    break;
+                case 2:
+                    System.out.println("TODO: add a grey");
+                    is_blues_turn = false;
+                    break;
+                case 3:
+                    System.out.println("Blue does nothing");
+                    is_blues_turn = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice, try again");
+                    break;
             }
         }
     }
 
+    private void sendRedMessage(int level) {
+        for (Green g : greens) {
+            // skip if green doesn't follow red
+            if (!g.followsRed) {
+                continue;
+            }
 
-    /**
-     * if grey is a spy, it can act like a red agent without losing followers
-     * if it is an ally of blue, blue can take its turn, without losing a lifeline.
-     *
-     * @param greynode the grey node
-     */
-    public void grey_turn(Grey greynode){
-        boolean isSpy = greynode.SpyorNot();
+            if (g.willVote) {
 
-        //if grey is a spy, it can act like a red agent without losing followers
-        if (isSpy){
-            //send a message to the greens
-            InfluenceGreen(rednode);
-        }
-
-        //if it is an ally of blue, blue can take its turn, without losing a lifeline.
-        else{
-            //blue can take its turn, without losing a lifeline.
-            //add blue turn here
-            // either interacts with green
-
-            Blue_interracting_with_green();
-
-
-            //added this line -- just so I can remember that blues looses 0 energy
-            bluenode.LoseEnergy(0);
-
+            }
         }
     }
 
-/**
-     * if blue is a spy, it can act like a red agent without losing followers
-     * if it is an ally of grey, grey can take its turn, without losing a lifeline.
-     *
-     */
-    public void Blue_interracting_with_green(){
+    private void sendBlueMessage(int level) {
+        // TODO Auto-generated method stub
 
-        for (Green g : greens) {
-            //need to discuss what exactly blue can do with green
-            if (g.followsRed) {
-                g.calcNewUncertainty();
-            }
-        }
     }
 }

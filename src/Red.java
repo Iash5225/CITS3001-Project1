@@ -9,7 +9,7 @@ public class Red extends GameObject {
     }
 
     public void setLevelofMessage(int levelofMessage) {
-        this.levelofMessage = levelofMessage; //work on that
+        this.levelofMessage = levelofMessage; // work on that
         System.out.println("Red is sending a level " + levelofMessage + "message");
 
     }

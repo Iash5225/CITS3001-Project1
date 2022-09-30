@@ -1,5 +1,3 @@
-//package src;
-
 import java.util.Vector;
 
 public class Green extends GameObject {
@@ -15,6 +13,16 @@ public class Green extends GameObject {
         this.willVote = willVote;
         this.followsRed = followsRed;
         friends = new Vector<Green>();
+    }
+
+    public void print() {
+        String u_rounded = String.format("%.2f", uncertainty);
+        System.out.print(id + " " + u_rounded + " " + willVote + " " + followsRed);
+        System.out.print(" [ ");
+        for (Green g : friends) {
+            System.out.print(g.id + " ");
+        }
+        System.out.println("]");
     }
 
     public void calcNewUncertainty() {

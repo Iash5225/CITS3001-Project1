@@ -1,4 +1,4 @@
-package src;
+//package src;
 
 public class Red extends GameObject {
     public int levelofMessage;

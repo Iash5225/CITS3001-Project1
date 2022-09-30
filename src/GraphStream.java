@@ -8,14 +8,16 @@ public class GraphStream {
 
         Graph graph = new SingleGraph("Tutorial 1");
 
-        for (int i = 0; i < 100; i++) {
+        int N_NODES = 10;
+
+        for (int i = 0; i < N_NODES; i++) {
             graph.addNode(Integer.toString(i));
         }
 
         // Add some edges
-        for (int i = 0; i < 100; i++) {
-            for (int j = i + 1; j < 100; j++) {
-                if (Math.random() < 0.05) {
+        for (int i = 0; i < N_NODES; i++) {
+            for (int j = i + 1; j < N_NODES; j++) {
+                if (Math.random() < 0.5) {
                     graph.addEdge(Integer.toString(i) + "-" + Integer.toString(j), Integer.toString(i),
                             Integer.toString(j));
                 }

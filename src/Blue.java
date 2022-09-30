@@ -1,10 +1,8 @@
-//package src;
-
 public class Blue extends GameObject {
 
     public double energy;
 
-    public Blue (double energy){
+    public Blue(double energy) {
         super();
         this.energy = energy;
     }
@@ -13,10 +11,11 @@ public class Blue extends GameObject {
         return energy;
     }
 
-    public void LoseEnergy(double cost){
-        this.energy = getEnergy()-cost;
+    public void LoseEnergy(double cost) {
+        this.energy = getEnergy() - cost;
     }
-    public boolean LostALLEnergy(){
+
+    public boolean LostALLEnergy() {
         return getEnergy() == 0;
     }
 }

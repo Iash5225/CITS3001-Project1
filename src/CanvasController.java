@@ -10,8 +10,29 @@ public class CanvasController extends JFrame implements MouseInputListener {
 
     public CanvasController(String title) {
         super(title);
+        setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 400);
+        setSize(800, 600);
+
+        // Define 5 buttons
+        JButton b1 = new JButton("Red");
+        JButton b2 = new JButton("Green");
+        JButton b3 = new JButton("Blue");
+        JButton b4 = new JButton("Yellow");
+        JButton b5 = new JButton("Black");
+
+        // Define a panel to hold the buttons
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+        panel.add(b1);
+        panel.add(b2);
+        panel.add(b3);
+        panel.add(b4);
+        panel.add(b5);
+
+        getContentPane().add(panel, BorderLayout.SOUTH);
+        setVisible(true);
+
         canvas = new Canvas();
         canvas.addMouseListener(this);
         canvas.addMouseMotionListener(this);
@@ -19,6 +40,22 @@ public class CanvasController extends JFrame implements MouseInputListener {
         JButton button = new JButton("Clear");
         getContentPane().add(button, BorderLayout.SOUTH);
         setVisible(true);
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Graphics g = canvas.getGraphics();
+                g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            }
+        });
+    }
+
+    // create a color change jbutton
+    public void colorChange(JButton button, Color color) {
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Graphics g = canvas.getGraphics();
+                g.setColor(color);
+            }
+        });
     }
 
     public void mousePressed(MouseEvent e) {

@@ -6,7 +6,7 @@ public class Game {
     public Vector<Grey> greys;
     public Blue blue;
 
-    public int n_rounds;
+    public int n_rounds = 10;
     public int current_round;
     public boolean is_blues_turn;
 
@@ -59,7 +59,7 @@ public class Game {
         is_blues_turn = false;
 
         // set number of rounds to 10
-        n_rounds = 10;
+        // n_rounds = 10;
     }
 
     /**
@@ -99,24 +99,25 @@ public class Game {
             System.out.println("(1) Send a message");
             System.out.println("(2) Do nothing");
             System.out.print("Enter your choice: ");
-            Scanner sc = new Scanner(System.in);
-            int choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter the message level from 1-5: ");
+            try (Scanner sc = new Scanner(System.in)) {
+                int choice = sc.nextInt();
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter the message level from 1-5: ");
 
-                    int level = sc.nextInt();
-                    red.setLevelofMessage(level);
-                    System.out.println("TODO: send message from red");
-                    is_blues_turn = true;
-                    break;
-                case 2:
-                    System.out.println("Red does nothing");
-                    is_blues_turn = true;
-                    break;
-                default:
-                    System.out.println("Invalid choice, try again");
-                    break;
+                        int level = sc.nextInt();
+                        System.out.println("TODO: send message from red");
+                        sendRedMessage(level);
+                        is_blues_turn = true;
+                        break;
+                    case 2:
+                        System.out.println("Red does nothing");
+                        is_blues_turn = true;
+                        break;
+                    default:
+                        System.out.println("Invalid choice, try again");
+                        break;
+                }
             }
         }
 
@@ -134,26 +135,27 @@ public class Game {
             System.out.println("(2) Add a grey");
             System.out.println("(3) Do nothing");
             System.out.print("Enter your choice: ");
-            Scanner sc = new Scanner(System.in);
-            int choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    System.out.print("Enter the message level from 1-5: ");
-                    int level = sc.nextInt();
-                    System.out.println("TODO: send message from blue");
-                    is_blues_turn = false;
-                    break;
-                case 2:
-                    System.out.println("TODO: add a grey");
-                    is_blues_turn = false;
-                    break;
-                case 3:
-                    System.out.println("Blue does nothing");
-                    is_blues_turn = false;
-                    break;
-                default:
-                    System.out.println("Invalid choice, try again");
-                    break;
+            try (Scanner sc = new Scanner(System.in)) {
+                int choice = sc.nextInt();
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter the message level from 1-5: ");
+                        int level = sc.nextInt();
+                        System.out.println("TODO: send message from blue");
+                        is_blues_turn = false;
+                        break;
+                    case 2:
+                        System.out.println("TODO: add a grey");
+                        is_blues_turn = false;
+                        break;
+                    case 3:
+                        System.out.println("Blue does nothing");
+                        is_blues_turn = false;
+                        break;
+                    default:
+                        System.out.println("Invalid choice, try again");
+                        break;
+                }
             }
         }
     }
@@ -166,7 +168,9 @@ public class Game {
             }
 
             if (g.willVote) {
-
+                //check if the addition of the uncertainty is greater than 1
+                if (g.uncertainty + 0.1 * level < 1)
+                    g.uncertainty = g.uncertainty + 0.1 * level;
             }
         }
     }

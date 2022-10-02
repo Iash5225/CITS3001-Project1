@@ -6,7 +6,7 @@ public class Game {
     public Vector<Grey> greys;
     public Blue blue;
 
-    public int n_rounds = 2;
+    public int n_rounds = 10;
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;

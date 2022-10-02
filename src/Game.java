@@ -7,9 +7,11 @@ public class Game {
     public Blue blue;
 
     public int n_rounds = 2;
-    double Min_Uncertainty = 0.75;
+    public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
+    public int n_greys_released=-1;
+    public int number_of_greys = 0;
 
     /**
      * Creates a new game with the given parameters.
@@ -50,6 +52,7 @@ public class Game {
             boolean isSpy = Math.random() < prob_spy;
             greys.add(new Grey(isSpy));
         }
+        number_of_greys = n_grey;
 
         // create red and blue
         red = new Red();
@@ -194,6 +197,9 @@ public class Game {
                     break;
                 case 2:
                     System.out.println("TODO: add a grey");
+                    System.out.print("\033[0;35m");
+                    release_greys();
+                    System.out.print("\033[0m");
                     is_blues_turn = false;
                     break;
                 case 3:
@@ -210,6 +216,20 @@ public class Game {
                     break;
             }
 
+        }
+    }
+
+
+    private void release_greys() {
+        // TODO Auto-generated method stub
+        n_greys_released++;
+        if (n_greys_released <= number_of_greys) {
+            Grey grey_agent = greys.get(n_greys_released);
+            if (grey_agent.isSpy) {
+                System.out.println("A spy has been released");
+            } else {
+                System.out.println("A non-spy has been released");
+            }
         }
     }
 
@@ -256,5 +276,16 @@ public class Game {
             }
 
         }
+    }
+
+
+    public int number_of_voting_greens() {
+        int count = 0;
+        for (Green g : greens) {
+            if (g.willVote) {
+                count++;
+            }
+        }
+        return count;
     }
 }

@@ -7,6 +7,7 @@ public class Game {
     public Blue blue;
 
     public int n_rounds = 2;
+    double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
 
@@ -107,7 +108,7 @@ public class Game {
 
                     int level = sc.nextInt();
                     System.out.print("\033[0;35m");
-                    
+
                     switch (level) {
                         case 1:
                             System.out.println("Blue sucks #1");
@@ -127,7 +128,7 @@ public class Game {
                         default:
                             break;
                     }
-                    //System.out.println("TODO: send message from red");
+                    // System.out.println("TODO: send message from red");
                     System.out.print("\033[0m");
                     sendRedMessage(level);
                     is_blues_turn = true;
@@ -186,8 +187,9 @@ public class Game {
                         default:
                             break;
                     }
-                    //System.out.println("TODO: send message from blue");
+                    // System.out.println("TODO: send message from blue");
                     System.out.print("\033[0m");
+                    sendBlueMessage(level);
                     is_blues_turn = false;
                     break;
                 case 2:
@@ -221,16 +223,38 @@ public class Game {
             if (g.willVote) {
                 // check if the addition of the uncertainty is greater than 1
                 double newUncertainty = Math.round((g.uncertainty + 0.1 * level) * 100.0) / 100.0;
-                if (newUncertainty <= 1)
+                if (newUncertainty <= 1) {
                     g.uncertainty = newUncertainty;
+                }
             }
-
-
         }
     }
 
     private void sendBlueMessage(int level) {
         // TODO Auto-generated method stub
+        for (Green g : greens) {
+            // if green doesn't follow red, make sure they
+            if (!g.followsRed) {
+                continue;
+            }
 
+            if (g.willVote) {
+                // check greens uncertainty
+
+                // Check if the uncertainty is greater than the "high uncertainty" threshold
+                // double EnergyLoss = Math.round((0.1 * level) * 100.0) / 100.0;
+
+
+                double newUncertainty = Math.round((g.uncertainty + 0.1 * level) * 100.0) / 100.0;
+                if (newUncertainty <= 1) {
+                    g.uncertainty = newUncertainty;
+                }
+
+                if (Math.abs(g.uncertainty) > Min_Uncertainty) {
+                    blue.LoseEnergy(10);
+                }
+            }
+
+        }
     }
 }

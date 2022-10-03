@@ -89,11 +89,11 @@ public class Game {
     public void nextRound() {
         current_round++;
         System.out.println("=========================================");
-        System.out.print("\033[4;37m");
-        System.out.println("Round " + current_round);
-        System.out.print("\033[0m");
+        System.out.print("\033[47m");
+        System.out.println("Round " + current_round + "\033[0m");
         change_following();
         change_votes();
+        System.out.println("Number of Grey Agents Active: " + greys.size());
         game_status();
         while (!is_blues_turn) {
             // red's turn
@@ -168,7 +168,14 @@ public class Game {
             System.out.println("Blue's energy: " + blue.getEnergy());
             System.out.println("Blue's options:");
             System.out.println("(1) Send a message");
-            System.out.println("(2) Add a grey");
+            if (greys.size() > 0) {
+                System.out.println("(2) Add a grey");
+            }
+            else{
+                System.out.println("no grey agents left");
+            }
+                
+           // System.out.println("(2) Add a grey");
             System.out.println("(3) Do nothing");
             System.out.print("Enter your choice: ");
             Scanner sc = new Scanner(System.in);
@@ -251,11 +258,11 @@ public class Game {
         if (current_round == n_rounds) {
             if (number_of_red_votes > number_of_blue_votes) {
                 System.out.print("\033[41m");
-                System.out.println("Red wins!");
+                System.out.println("Red wins!" + "\033[0m");
                 System.out.print("\033[0m");
             } else if (number_of_red_votes < number_of_blue_votes) {
                 System.out.print("\033[44m");
-                System.out.println("Blue wins!");
+                System.out.println("Blue wins!" + "\033[0m");
                 System.out.print("\033[0m");
             } else {
                 System.out.println("Tie!");
@@ -263,16 +270,15 @@ public class Game {
         }
 
         if (blue.LostALLEnergy()) {
-            System.out.print("\033[47m");
+
+            System.out.print("\033[41m");
+            System.out.println("Red wins!" + "\033[0m");
             System.out.println("Blue lost all energy");
-            System.out.println("Red wins");
-            System.out.print("\033[0m");
             System.exit(0);
         } else if (number_of_red_followers == 0) {
-            System.out.print("\033[47m");
+            System.out.print("\033[44m");
+            System.out.println("Blue wins!" + "\033[0m");
             System.out.println("Red lost all followers");
-            System.out.println("Blue wins");
-            System.out.print("\033[0m");
             System.exit(0);
         }
 

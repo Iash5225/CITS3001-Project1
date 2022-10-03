@@ -6,7 +6,7 @@ public class Game {
     public Vector<Grey> greys;
     public Blue blue;
 
-    public int n_rounds = 10;
+    public int n_rounds = 3;
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
@@ -170,12 +170,11 @@ public class Game {
             System.out.println("(1) Send a message");
             if (greys.size() > 0) {
                 System.out.println("(2) Add a grey");
-            }
-            else{
+            } else {
                 System.out.println("no grey agents left");
             }
-                
-           // System.out.println("(2) Add a grey");
+
+            // System.out.println("(2) Add a grey");
             System.out.println("(3) Do nothing");
             System.out.print("Enter your choice: ");
             Scanner sc = new Scanner(System.in);

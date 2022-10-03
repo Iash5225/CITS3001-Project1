@@ -10,7 +10,7 @@ public class Game {
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
-    public double energy_cost=20;
+    public double energy_cost = 20;
     public int n_greys_released = -1;
     public int number_of_greys = 0;
     public double chance_of_switching = 0.2;
@@ -89,9 +89,11 @@ public class Game {
     public void nextRound() {
         current_round++;
         System.out.println("=========================================");
+        System.out.print("\033[4;37m");
         System.out.println("Round " + current_round);
+        System.out.print("\033[0m");
         change_following();
-        check_votes();
+        change_votes();
         game_status();
         while (!is_blues_turn) {
             // red's turn
@@ -224,18 +226,42 @@ public class Game {
         }
     }
 
-    private void game_status() {
+    public void game_status() {
         int number_of_red_followers = 0;
         int number_of_blue_followers = 0;
+        int number_of_red_votes = 0;
+        int number_of_blue_votes = 0;
         for (Green g : greens) {
             if (g.followsRed) {
                 number_of_red_followers++;
             } else {
                 number_of_blue_followers++;
             }
+            if (g.willVote) {
+                if (g.followsRed) {
+                    number_of_red_votes++;
+                } else {
+                    number_of_blue_votes++;
+                }
+            }
         }
         System.out.println("=========================================");
         System.out.println("Game status:");
+
+        if (current_round == n_rounds) {
+            if (number_of_red_votes > number_of_blue_votes) {
+                System.out.print("\033[41m");
+                System.out.println("Red wins!");
+                System.out.print("\033[0m");
+            } else if (number_of_red_votes < number_of_blue_votes) {
+                System.out.print("\033[44m");
+                System.out.println("Blue wins!");
+                System.out.print("\033[0m");
+            } else {
+                System.out.println("Tie!");
+            }
+        }
+
         if (blue.LostALLEnergy()) {
             System.out.print("\033[47m");
             System.out.println("Blue lost all energy");
@@ -249,16 +275,21 @@ public class Game {
             System.out.print("\033[0m");
             System.exit(0);
         }
+
+        // add green interracting here
+        // TODO add green interractng here, and the rest of the game status
+        // calculate new uncertainty ,and deal with the votes
+
         System.out.println("Number of red followers: " + number_of_red_followers);
         System.out.println("Number of blue followers: " + number_of_blue_followers);
 
     }
 
     /**
-     * Checks the votes of the greens.
+     * Changes the votes of the greens.
      */
 
-    private void check_votes() {
+    private void change_votes() {
         int count = 0;
         if (current_round != 1) {
             for (Green g : greens) {

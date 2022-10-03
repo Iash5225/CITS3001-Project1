@@ -6,9 +6,12 @@ public class Game {
     public Vector<Grey> greys;
     public Blue blue;
 
-    public int n_rounds;
+    public int n_rounds = 10;
+    public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
+    public int n_greys_released=-1;
+    public int number_of_greys = 0;
 
     /**
      * Creates a new game with the given parameters.
@@ -49,6 +52,7 @@ public class Game {
             boolean isSpy = Math.random() < prob_spy;
             greys.add(new Grey(isSpy));
         }
+        number_of_greys = n_grey;
 
         // create red and blue
         red = new Red();
@@ -59,7 +63,7 @@ public class Game {
         is_blues_turn = false;
 
         // set number of rounds to 10
-        n_rounds = 10;
+        // n_rounds = 10;
     }
 
     /**
@@ -106,16 +110,42 @@ public class Game {
                     System.out.print("Enter the message level from 1-5: ");
 
                     int level = sc.nextInt();
-                    red.setLevelofMessage(level);
-                    System.out.println("TODO: send message from red");
+                    System.out.print("\033[0;35m");
+
+                    switch (level) {
+                        case 1:
+                            System.out.println("Blue sucks #1");
+                            break;
+                        case 2:
+                            System.out.println("Blue sucks #2");
+                            break;
+                        case 3:
+                            System.out.println("Blue sucks #3");
+                            break;
+                        case 4:
+                            System.out.println("Blue sucks #4");
+                            break;
+                        case 5:
+                            System.out.println("Blue sucks #5");
+                            break;
+                        default:
+                            break;
+                    }
+                    // System.out.println("TODO: send message from red");
+                    System.out.print("\033[0m");
+                    sendRedMessage(level);
                     is_blues_turn = true;
                     break;
                 case 2:
+                    System.out.print("\033[0;35m");
                     System.out.println("Red does nothing");
+                    System.out.print("\033[0m");
                     is_blues_turn = true;
                     break;
                 default:
+                    System.out.print("\033[0;35m");
                     System.out.println("Invalid choice, try again");
+                    System.out.print("\033[0m");
                     break;
             }
         }
@@ -140,20 +170,65 @@ public class Game {
                 case 1:
                     System.out.print("Enter the message level from 1-5: ");
                     int level = sc.nextInt();
-                    System.out.println("TODO: send message from blue");
+                    System.out.print("\033[0;35m");
+                    switch (level) {
+                        case 1:
+                            System.out.println("Red sucks #1");
+                            break;
+                        case 2:
+                            System.out.println("Red sucks #2");
+                            break;
+                        case 3:
+                            System.out.println("Red sucks #3");
+                            break;
+                        case 4:
+                            System.out.println("Red sucks #4");
+                            break;
+                        case 5:
+                            System.out.println("Red sucks #5");
+                            break;
+                        default:
+                            break;
+                    }
+                    // System.out.println("TODO: send message from blue");
+                    System.out.print("\033[0m");
+                    sendBlueMessage(level);
                     is_blues_turn = false;
                     break;
                 case 2:
                     System.out.println("TODO: add a grey");
+                    System.out.print("\033[0;35m");
+                    release_greys();
+                    System.out.print("\033[0m");
                     is_blues_turn = false;
                     break;
                 case 3:
+                    System.out.print("\033[0;35m");
                     System.out.println("Blue does nothing");
+                    System.out.print("\033[0m");
                     is_blues_turn = false;
                     break;
                 default:
+                    // change print color to purple
+                    System.out.print("\033[0;35m");
                     System.out.println("Invalid choice, try again");
+                    System.out.print("\033[0m");
                     break;
+            }
+
+        }
+    }
+
+
+    private void release_greys() {
+        // TODO Auto-generated method stub
+        n_greys_released++;
+        if (n_greys_released <= number_of_greys) {
+            Grey grey_agent = greys.get(n_greys_released);
+            if (grey_agent.isSpy) {
+                System.out.println("A spy has been released");
+            } else {
+                System.out.println("A non-spy has been released");
             }
         }
     }
@@ -166,13 +241,51 @@ public class Game {
             }
 
             if (g.willVote) {
-
+                // check if the addition of the uncertainty is greater than 1
+                double newUncertainty = Math.round((g.uncertainty + 0.1 * level) * 100.0) / 100.0;
+                if (newUncertainty <= 1) {
+                    g.uncertainty = newUncertainty;
+                }
             }
         }
     }
 
     private void sendBlueMessage(int level) {
         // TODO Auto-generated method stub
+        for (Green g : greens) {
+            // if green doesn't follow red, make sure they
+            if (!g.followsRed) {
+                continue;
+            }
 
+            if (g.willVote) {
+                // check greens uncertainty
+
+                // Check if the uncertainty is greater than the "high uncertainty" threshold
+                // double EnergyLoss = Math.round((0.1 * level) * 100.0) / 100.0;
+
+
+                double newUncertainty = Math.round((g.uncertainty + 0.1 * level) * 100.0) / 100.0;
+                if (newUncertainty <= 1) {
+                    g.uncertainty = newUncertainty;
+                }
+
+                if (Math.abs(g.uncertainty) > Min_Uncertainty) {
+                    blue.LoseEnergy(10);
+                }
+            }
+
+        }
+    }
+
+
+    public int number_of_voting_greens() {
+        int count = 0;
+        for (Green g : greens) {
+            if (g.willVote) {
+                count++;
+            }
+        }
+        return count;
     }
 }

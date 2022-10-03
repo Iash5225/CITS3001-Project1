@@ -6,12 +6,13 @@ public class Game {
     public Vector<Grey> greys;
     public Blue blue;
 
-    public int n_rounds = 10;
+    public int n_rounds = 3;
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
-    public int n_greys_released=-1;
+    public int n_greys_released = -1;
     public int number_of_greys = 0;
+    public double chance_of_switching = 0.2;
 
     /**
      * Creates a new game with the given parameters.
@@ -88,6 +89,9 @@ public class Game {
         current_round++;
         System.out.println("=========================================");
         System.out.println("Round " + current_round);
+        change_following(chance_of_switching);
+        check_votes();
+        game_status();
         while (!is_blues_turn) {
             // red's turn
             System.out.println("===================================");
@@ -192,11 +196,11 @@ public class Game {
                     }
                     // System.out.println("TODO: send message from blue");
                     System.out.print("\033[0m");
-                    sendBlueMessage(level);
+                    sendBlueMessage(level, false);
                     is_blues_turn = false;
                     break;
                 case 2:
-                    System.out.println("TODO: add a grey");
+                    // System.out.println("TODO: add a grey");
                     System.out.print("\033[0;35m");
                     release_greys();
                     System.out.print("\033[0m");
@@ -219,18 +223,73 @@ public class Game {
         }
     }
 
+    private void game_status() {
+        int number_of_red_followers = 0;
+        int number_of_blue_followers = 0;
+        for (Green g : greens) {
+            if (g.followsRed) {
+                number_of_red_followers++;
+            } else {
+                number_of_blue_followers++;
+            }
+        }
+        System.out.println("=========================================");
+        System.out.println("Game status:");
+        System.out.println("Number of red followers: " + number_of_red_followers);
+        System.out.println("Number of blue followers: " + number_of_blue_followers);
+
+    }
+
+    /**
+     * Checks the votes of the greens.
+     */
+
+    private void check_votes() {
+        int count = 0;
+        if (current_round != 1) {
+            for (Green g : greens) {
+                // if green has an uncertainty above 0.75 or below -0.75, and they will switch
+                // their votes
+                if (Math.abs(g.uncertainty) > Min_Uncertainty) {
+                    g.willVote = !g.willVote;
+                    count++;
+                }
+            }
+        }
+        System.out.println("Number of agents who have changed their votes: " + count);
+    }
+
+    private void change_following(double percentage_to_follow_red) {
+        int count = 0;
+        if (current_round != 1) {
+            for (Green g : greens) {
+                // if green has an uncertainty above 0.75 or below -0.75, and they will switch
+                // their votes
+                boolean Team_red = Math.random() < percentage_to_follow_red;
+                if (Team_red) {
+                    g.followsRed = !g.followsRed;
+                    count++;
+                }
+            }
+        }
+        System.out.println("Number of agents who have changed their teams: " + count);
+    }
 
     private void release_greys() {
         // TODO Auto-generated method stub
-        n_greys_released++;
-        if (n_greys_released <= number_of_greys) {
-            Grey grey_agent = greys.get(n_greys_released);
-            if (grey_agent.isSpy) {
-                System.out.println("A spy has been released");
-            } else {
-                System.out.println("A non-spy has been released");
-            }
+        Grey grey_agent = greys.get(0);
+        if (grey_agent.isSpy) {
+            System.out.println("A RED spy has been released");
+            // Potent message = 5
+            sendRedMessage(5);
+            System.out.println("Blue sucks #5");
+        } else {
+            System.out.println("A non-spy has been released");
+            // Potent message = 5
+            sendBlueMessage(5, true);
+            System.out.println("Red sucks #5");
         }
+        greys.remove(0);
     }
 
     private void sendRedMessage(int level) {
@@ -250,7 +309,8 @@ public class Game {
         }
     }
 
-    private void sendBlueMessage(int level) {
+    private void sendBlueMessage(int level, boolean Grey_turn) {
+
         // TODO Auto-generated method stub
         for (Green g : greens) {
             // if green doesn't follow red, make sure they
@@ -264,20 +324,18 @@ public class Game {
                 // Check if the uncertainty is greater than the "high uncertainty" threshold
                 // double EnergyLoss = Math.round((0.1 * level) * 100.0) / 100.0;
 
-
                 double newUncertainty = Math.round((g.uncertainty + 0.1 * level) * 100.0) / 100.0;
                 if (newUncertainty <= 1) {
                     g.uncertainty = newUncertainty;
                 }
 
-                if (Math.abs(g.uncertainty) > Min_Uncertainty) {
+                if (Math.abs(g.uncertainty) > Min_Uncertainty && !Grey_turn) {
                     blue.LoseEnergy(10);
                 }
             }
 
         }
     }
-
 
     public int number_of_voting_greens() {
         int count = 0;

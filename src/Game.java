@@ -6,10 +6,11 @@ public class Game {
     public Vector<Grey> greys;
     public Blue blue;
 
-    public int n_rounds = 3;
+    public int n_rounds = 10;
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
+    public double energy_cost=20;
     public int n_greys_released = -1;
     public int number_of_greys = 0;
     public double chance_of_switching = 0.2;
@@ -89,7 +90,7 @@ public class Game {
         current_round++;
         System.out.println("=========================================");
         System.out.println("Round " + current_round);
-        change_following(chance_of_switching);
+        change_following();
         check_votes();
         game_status();
         while (!is_blues_turn) {
@@ -235,6 +236,19 @@ public class Game {
         }
         System.out.println("=========================================");
         System.out.println("Game status:");
+        if (blue.LostALLEnergy()) {
+            System.out.print("\033[47m");
+            System.out.println("Blue lost all energy");
+            System.out.println("Red wins");
+            System.out.print("\033[0m");
+            System.exit(0);
+        } else if (number_of_red_followers == 0) {
+            System.out.print("\033[47m");
+            System.out.println("Red lost all followers");
+            System.out.println("Blue wins");
+            System.out.print("\033[0m");
+            System.exit(0);
+        }
         System.out.println("Number of red followers: " + number_of_red_followers);
         System.out.println("Number of blue followers: " + number_of_blue_followers);
 
@@ -259,13 +273,13 @@ public class Game {
         System.out.println("Number of agents who have changed their votes: " + count);
     }
 
-    private void change_following(double percentage_to_follow_red) {
+    private void change_following() {
         int count = 0;
         if (current_round != 1) {
             for (Green g : greens) {
                 // if green has an uncertainty above 0.75 or below -0.75, and they will switch
                 // their votes
-                boolean Team_red = Math.random() < percentage_to_follow_red;
+                boolean Team_red = Math.random() < chance_of_switching;
                 if (Team_red) {
                     g.followsRed = !g.followsRed;
                     count++;
@@ -330,7 +344,7 @@ public class Game {
                 }
 
                 if (Math.abs(g.uncertainty) > Min_Uncertainty && !Grey_turn) {
-                    blue.LoseEnergy(10);
+                    blue.LoseEnergy(energy_cost);
                 }
             }
 

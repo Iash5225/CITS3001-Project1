@@ -16,6 +16,6 @@ public class Blue extends GameObject {
     }
 
     public boolean LostALLEnergy() {
-        return getEnergy() == 0;
+        return getEnergy() <= 0;
     }
 }

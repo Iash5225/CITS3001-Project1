@@ -233,6 +233,9 @@ public class Game {
         }
     }
 
+    /**
+     * Prints the status of the game.
+     */
     public void game_status() {
         int number_of_red_followers = 0;
         int number_of_blue_followers = 0;

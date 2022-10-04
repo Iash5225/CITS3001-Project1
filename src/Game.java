@@ -139,7 +139,7 @@ public class Game {
                     }
                     // System.out.println("TODO: send message from red");
                     System.out.print("\033[0m");
-                    sendRedMessage(level,false);
+                    sendRedMessage(level, false);
                     is_blues_turn = true;
                     break;
                 case 2:
@@ -228,6 +228,41 @@ public class Game {
                     break;
             }
 
+        }
+    }
+
+    /**
+     * Green talking to eachother on voting day
+     */
+
+    public void green_voting_day() {
+        int[] interracted_greens = new int[greens.size()];
+        for (int i = 0; i < greens.size(); i++) {
+            interracted_greens[i] = 0;
+        }
+        for (int i = 0; i < interracted_greens.length; i++) {
+            //Green Current = greens.get(i);
+            for (int j = 0; j < greens.get(i).friends.size(); j++) {
+                // Green Friend = Current.friends.get(j);
+                if (interracted_greens[greens.get(i).friends.get(j).id] == 0) {
+                    interracted_greens[greens.get(i).friends.get(j).id] = 1;
+                    System.out.println("Green " + greens.get(i).id + " is talking to Green " + greens.get(i).friends.get(j).id);
+                    double newUncertainty = (greens.get(i).uncertainty + greens.get(i).friends.get(j).uncertainty) / 2;
+
+                    // if leader is more certain that they are going to vote, leader infuences
+                    // friend
+                    if (greens.get(i).uncertainty < greens.get(i).friends.get(j).uncertainty) {
+                        greens.get(i).friends.get(j).willVote = greens.get(i).willVote;
+                        greens.get(i).friends.get(j).uncertainty = newUncertainty;
+                    } else if (greens.get(i).uncertainty == greens.get(i).friends.get(j).uncertainty) {
+                        // do nothing
+                        continue;
+                    } else {
+                        greens.get(i).willVote = greens.get(i).friends.get(j).willVote;
+                        greens.get(i).uncertainty = newUncertainty;
+                    }
+                }
+            }
         }
     }
 
@@ -333,7 +368,7 @@ public class Game {
         if (grey_agent.isSpy) {
             System.out.println("A RED spy has been released");
             // Potent message = 5
-            sendRedMessage(5,true);
+            sendRedMessage(5, true);
             System.out.println("Blue sucks #5");
         } else {
             System.out.println("A non-spy has been released");
@@ -344,7 +379,7 @@ public class Game {
         greys.remove(0);
     }
 
-    private void sendRedMessage(int level,boolean grey_turn) {
+    private void sendRedMessage(int level, boolean grey_turn) {
         for (Green g : greens) {
             // skip if green doesn't follow red
             if (!g.followsRed) {
@@ -359,10 +394,9 @@ public class Game {
                 }
             }
         }
-        if(grey_turn){
-            change_votes(Double.MAX_VALUE); 
-        }
-        else{
+        if (grey_turn) {
+            change_votes(Double.MAX_VALUE);
+        } else {
             change_votes(Min_Uncertainty);
         }
     }

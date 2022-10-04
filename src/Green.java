@@ -34,6 +34,23 @@ public class Green extends GameObject {
         du = (avg - uncertainty) / 2;
     }
 
+    public void green_interraction(){
+        for (Green FRIEND : friends) {
+            double leader_uncertainty = uncertainty;
+
+            //if leader is more certain that they are going to vote, leader infuences friend
+            if(leader_uncertainty< FRIEND.uncertainty){
+                if(willVote == true){
+                    FRIEND.willVote = true;
+                }
+                else{
+                    FRIEND.willVote = false;
+                }
+            }
+            
+        }
+    }
+
     public void update() {
         uncertainty += du;
         du = 0;

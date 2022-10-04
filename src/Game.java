@@ -6,11 +6,11 @@ public class Game {
     public Vector<Grey> greys;
     public Blue blue;
 
-    public int n_rounds = 3;
+    public int n_rounds = 5;
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
-    public double energy_cost = 20;
+    public double energy_cost = 10;
     public int n_greys_released = -1;
     public int number_of_greys = 0;
     public double chance_of_switching = 0.2;
@@ -92,7 +92,6 @@ public class Game {
         System.out.print("\033[47m");
         System.out.println("Round " + current_round + "\033[0m");
         change_following();
-        change_votes();
         System.out.println("Number of Grey Agents Active: " + greys.size());
         game_status();
         while (!is_blues_turn) {
@@ -140,7 +139,7 @@ public class Game {
                     }
                     // System.out.println("TODO: send message from red");
                     System.out.print("\033[0m");
-                    sendRedMessage(level);
+                    sendRedMessage(level,false);
                     is_blues_turn = true;
                     break;
                 case 2:
@@ -258,7 +257,7 @@ public class Game {
         System.out.println("=========================================");
         System.out.println("Game status:");
 
-        if (current_round == n_rounds) {
+        if (current_round > n_rounds) {
             if (number_of_red_votes > number_of_blue_votes) {
                 System.out.print("\033[41m");
                 System.out.println("Red wins!" + "\033[0m");
@@ -298,13 +297,13 @@ public class Game {
      * Changes the votes of the greens.
      */
 
-    private void change_votes() {
+    private void change_votes(double uncertainty) {
         int count = 0;
         if (current_round != 1) {
             for (Green g : greens) {
-                // if green has an uncertainty above 0.75 or below -0.75, and they will switch
+                // if green has an uncertainty above 0.75, and they will switch
                 // their votes
-                if (Math.abs(g.uncertainty) > Min_Uncertainty) {
+                if (g.uncertainty > uncertainty) {
                     g.willVote = !g.willVote;
                     count++;
                 }
@@ -335,7 +334,7 @@ public class Game {
         if (grey_agent.isSpy) {
             System.out.println("A RED spy has been released");
             // Potent message = 5
-            sendRedMessage(5);
+            sendRedMessage(5,true);
             System.out.println("Blue sucks #5");
         } else {
             System.out.println("A non-spy has been released");
@@ -346,7 +345,7 @@ public class Game {
         greys.remove(0);
     }
 
-    private void sendRedMessage(int level) {
+    private void sendRedMessage(int level,boolean grey_turn) {
         for (Green g : greens) {
             // skip if green doesn't follow red
             if (!g.followsRed) {
@@ -360,6 +359,12 @@ public class Game {
                     g.uncertainty = newUncertainty;
                 }
             }
+        }
+        if(grey_turn){
+            change_votes(Double.MAX_VALUE); 
+        }
+        else{
+            change_votes(Min_Uncertainty);
         }
     }
 
@@ -388,6 +393,11 @@ public class Game {
                 }
             }
 
+        }
+        if (Grey_turn) {
+            change_votes(Double.MAX_VALUE);
+        } else {
+            change_votes(Min_Uncertainty);
         }
     }
 

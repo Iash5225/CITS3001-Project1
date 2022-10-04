@@ -10,6 +10,7 @@ public class App {
         }
 
         game.printGreens();
+        game.current_round++;
         game.game_status();
 
         System.out.print("\033[1;93m");

@@ -8,7 +8,7 @@ public class App {
         while (game.current_round < game.n_rounds) {
             game.nextRound();
         }
-
+        
         game.printGreens();
         game.current_round++;
         game.game_status();

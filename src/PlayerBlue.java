@@ -16,6 +16,7 @@ public class PlayerBlue implements Player {
 
     private int get_next_move_human(Game game) {
         int move = -1;
+
         System.out.println("=========================================");
         System.out.print("\033[47m"); // set background to white
         System.out.println("Round " + game.current_round + "\033[0m");
@@ -40,7 +41,6 @@ public class PlayerBlue implements Player {
 
             switch (choice) {
                 case 1:
-
                     System.out.print("Enter the message level from 1-5: ");
 
                     // get user input
@@ -51,7 +51,6 @@ public class PlayerBlue implements Player {
                     if (level >= 1 && level <= 5) {
                         set_uncertainty(level);
                         move = 1;
-                        System.out.print("\033[0;34m"); // change color to blue
                         System.out.println("Blue sends a message of level " + level);
                     } else {
                         System.out.print("\033[0;31m"); // change text color to red

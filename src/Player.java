@@ -1,5 +1,3 @@
-import java.util.*;
-
 public interface Player {
     public boolean isAgent = false;
     public double uncertainty = 0.0;

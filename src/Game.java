@@ -270,7 +270,8 @@ public class Game {
         System.out.print("\033[0m");
 
         // print game info for players
-        print_game_info_for_players();
+        if (!p.isAgent)
+            print_game_info_for_players();
 
         // get blue's action
         int action = p.get_next_move(this);
@@ -303,10 +304,6 @@ public class Game {
         }
     }
 
-    /**
-     * Green talking to eachother on voting day
-     */
-
     private void release_grey() {
         Grey grey_agent = greys.remove(0);
         if (grey_agent.isSpy) {
@@ -324,6 +321,9 @@ public class Game {
         }
     }
 
+    /**
+     * Green talking to eachother on voting day
+     */
     public void green_voting_day() {
         int[] interracted_greens = new int[greens.size()];
         for (int i = 0; i < greens.size(); i++) {

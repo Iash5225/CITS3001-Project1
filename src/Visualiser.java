@@ -7,13 +7,16 @@ public class Visualiser {
     public static int Initial_Edge_Capacity = 100;
 
     public static void main(String args[]) {
-        Visualise(new Game(Initial_Node_Capacity, 0.3, 3, 0.33, 0, 0.5, 0.5));
+        Game game = new Game(Initial_Node_Capacity, 0.3, 3, 0.33, 0, 0.5, 0.5);
+        Visualise(game);
     }
 
     public static void Visualise(Game game) {
         // Visualising intial set up
         System.setProperty("org.graphstream.ui", "swing");
         Graph graph = new MultiGraph("Game", false, true, Initial_Node_Capacity, Initial_Edge_Capacity);
+        graph.setAttribute("ui.quality");
+        graph.setAttribute("ui.antialias");
         graph.setAttribute("ui.stylesheet", styleSheet);
 
         // Adding nodes
@@ -44,8 +47,8 @@ public class Visualiser {
                 }
             });
         });
-        add_Grey_Nodes(graph, game);
         graph.display();
+        add_Grey_Nodes(graph, game);
 
     }
 
@@ -55,17 +58,33 @@ public class Visualiser {
         node.setAttribute("ui.label", String.valueOf(grey.id) + ":" + grey.isSpy);
         node.setAttribute("ui.class", "grey");
 
+        explore(graph.getNode("0"));
+
+        graph.removeNode(node);
+
     }
 
-    protected static String styleSheet = "node {" +
-            "fill-color: green;" +
-            "text-size: 50;" +
-            "text-alignment: justify;" +
-            "}" +
-            "node.red {" +
-            "	fill-color: red;text-size: 50;" +
-            "}" +
-            "node.grey {" +
-            "	fill-color: grey;text-size: 50;" +
-            "}";
+    public static void explore(Node source) {
+        Iterator<? extends Node> k = source.getBreadthFirstIterator();
+        while (k.hasNext()) {
+            Node next = k.next();
+            String initial_class = String.valueOf(next.getLabel("ui.class"));
+            next.setAttribute("ui.class", "marked");
+            sleep();
+            next.setAttribute("ui.class", initial_class);
+        }
+    }
+
+    protected static void sleep() {
+        try {
+            Thread.sleep(600);
+        } catch (Exception e) {
+        }
+    }
+
+    protected static String styleSheet = "node {size-mode:dyn-size;fill-color: green;text-size: 50;text-alignment: justify;z-index:0;}"
+            +
+            "node.red {fill-color: red;}" +
+            "node.grey {fill-color: grey;}" +
+            "node.marked {fill-color: purple;arrow-size: 3px, 2px;}";
 }

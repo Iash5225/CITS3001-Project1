@@ -5,8 +5,8 @@ public class App {
 
         // game.printGreens();
 
-        PlayerRed red = new PlayerRed(false);
-        PlayerBlue blue = new PlayerBlue(false);
+        RedPlayer red = new RedPlayer(false);
+        BluePlayer blue = new BluePlayer(false);
 
         while (game.current_round < game.n_rounds) {
             game.red_turn(red);

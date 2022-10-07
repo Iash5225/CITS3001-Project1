@@ -1,8 +1,8 @@
-public class PlayerRed implements Player {
+public class RedPlayer implements Player {
     public boolean isAgent = false;
     public double uncertainty = 0.0;
 
-    public PlayerRed(boolean isAgent) {
+    public RedPlayer(boolean isAgent) {
         this.isAgent = isAgent;
     }
 

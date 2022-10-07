@@ -262,7 +262,7 @@ public class Game {
     /**
      * Red's turn.
      */
-    public void red_turn(PlayerRed p) {
+    public void red_turn(RedPlayer p) {
         // set color to red
         System.out.print("\033[0;31m");
         System.out.println("Red's turn");
@@ -310,7 +310,7 @@ public class Game {
     /**
      * Blue's turn.
      */
-    public void blue_turn(PlayerBlue p) {
+    public void blue_turn(BluePlayer p) {
         // set color to blue
         System.out.print("\033[0;34m");
         System.out.println("Blue's turn");

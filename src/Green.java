@@ -17,8 +17,8 @@ public class Green extends GameObject {
 
     public void print() {
         String u_rounded = String.format("%.2f", uncertainty);
-        System.out.print(id + " " + u_rounded + " " + willVote + " " + followsRed);
-        System.out.print(" [ ");
+        System.out.printf("%-2d | %-11s | %-8s | %-10s", id, u_rounded, willVote, followsRed);
+        System.out.print(" | [ ");
         for (Green g : friends) {
             System.out.print(g.id + " ");
         }

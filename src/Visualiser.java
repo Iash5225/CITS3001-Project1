@@ -5,21 +5,21 @@ import java.util.*;
 public class Visualiser {
     public static int Initial_Node_Capacity = 10;
     public static int Initial_Edge_Capacity = 100;
+    public Graph graph;
+    public Game game;
 
     public void main(String args[]) {
-        Game game = new Game(Initial_Node_Capacity, 0.3, 3, 0.33, 0, 0.5, 0.5);
-        setup(game);
+       // Game game = new Game(Initial_Node_Capacity, 0.3, 3, 0.33, 0, 0.5, 0.5);
+        setup();
     }
 
-    public void setup(Game game) {
+    public void setup() {
         // Visualising intial set up
         System.setProperty("org.graphstream.ui", "swing");
-        Graph graph = new MultiGraph("Game", false, true, game.greens.size(), Initial_Edge_Capacity);
+        graph = new MultiGraph("Game", false, true, game.greens.size(), Initial_Edge_Capacity);
         graph.setAttribute("ui.quality");
         graph.setAttribute("ui.antialias");
         graph.setAttribute("ui.stylesheet", styleSheet);
-
-        // Adding nodes
         game.greens.forEach((green) -> {
             Node node = graph.addNode(String.valueOf(green.id));
             node.setAttribute("ui.label", String.valueOf(green.id) + ":" + String.format("%.2f", green.uncertainty));
@@ -30,7 +30,6 @@ public class Visualiser {
             }
 
         });
-        //game.printGreens();
 
         // Game information
         ArrayList<String> green_interracArrayList = new ArrayList<String>();
@@ -47,11 +46,23 @@ public class Visualiser {
                 }
             });
         });
-        graph.display();
-        //add_Grey_Nodes(graph, game);
+        update_visualiser();
     }
 
-    public void add_Grey_Nodes(Graph graph, Game game) {
+    public void update_visualiser(){
+        game.greens.forEach((green) -> {
+            Node node = graph.getNode(String.valueOf(green.id));
+            node.setAttribute("ui.label", String.valueOf(green.id) + ":" + String.format("%.2f", green.uncertainty));
+            if (green.followsRed) {
+                node.setAttribute("ui.class", "red");
+            } else {
+                node.setAttribute("ui.class", "green");
+            }
+
+        });
+    }
+
+    public void add_Grey_Nodes() {
         Grey grey = game.greys.get(0);
         Node node = graph.addNode(String.valueOf(grey.id));
         node.setAttribute("ui.label", String.valueOf(grey.id) + ":" + grey.isSpy);

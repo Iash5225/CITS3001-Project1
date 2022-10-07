@@ -3,14 +3,18 @@ public class App {
         // create a new game
         Game game = new Game(10, 0.3, 3, 0.33, 0, 0.5, 0.5);
         Visualiser visualiser = new Visualiser();
+        visualiser.game = game;
+        visualiser.setup();
+        visualiser.graph.display();
 
         game.printGreens();
 
         while (game.current_round < game.n_rounds) {
             game.nextRound();
-            visualiser.setup(game);
+            visualiser.game = game;
+            visualiser.update_visualiser();
         }
-        
+
         game.printGreens();
         game.current_round++;
         game.game_status();

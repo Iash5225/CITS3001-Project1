@@ -63,9 +63,6 @@ public class Game {
         // set current round to 0
         current_round = 0;
         is_blues_turn = false;
-
-        // set number of rounds to 10
-        // n_rounds = 10;
     }
 
     /**

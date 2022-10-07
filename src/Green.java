@@ -34,6 +34,32 @@ public class Green extends GameObject {
         du = (avg - uncertainty) / 2;
     }
 
+    /**
+     * If 2 green agents have the same vote status, no change occurs.
+     * if 2 green agents have different vote status, the one with the higher
+     * certainty (more negative value), will change the other's vote status.
+     * then the person vote that has changed will get a new uncertainty thats the
+     * average of the 2.
+     */
+    public void green_interraction() {
+        for (Green FRIEND : friends) {
+            double newUncertainty = (uncertainty + FRIEND.uncertainty) / 2;
+
+            // if leader is more certain that they are going to vote, leader infuences
+            // friend
+            if (uncertainty < FRIEND.uncertainty) {
+                FRIEND.willVote = willVote;
+                FRIEND.uncertainty = newUncertainty;
+            } else if (uncertainty == FRIEND.uncertainty) {
+                // do nothing
+                continue;
+            } else {
+                willVote = FRIEND.willVote;
+                uncertainty = newUncertainty;
+            }
+        }
+    }
+
     public void update() {
         uncertainty += du;
         du = 0;

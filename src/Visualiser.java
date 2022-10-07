@@ -6,15 +6,15 @@ public class Visualiser {
     public static int Initial_Node_Capacity = 10;
     public static int Initial_Edge_Capacity = 100;
 
-    public static void main(String args[]) {
+    public void main(String args[]) {
         Game game = new Game(Initial_Node_Capacity, 0.3, 3, 0.33, 0, 0.5, 0.5);
-        Visualise(game);
+        setup(game);
     }
 
-    public static void Visualise(Game game) {
+    public void setup(Game game) {
         // Visualising intial set up
         System.setProperty("org.graphstream.ui", "swing");
-        Graph graph = new MultiGraph("Game", false, true, Initial_Node_Capacity, Initial_Edge_Capacity);
+        Graph graph = new MultiGraph("Game", false, true, game.greens.size(), Initial_Edge_Capacity);
         graph.setAttribute("ui.quality");
         graph.setAttribute("ui.antialias");
         graph.setAttribute("ui.stylesheet", styleSheet);
@@ -30,7 +30,7 @@ public class Visualiser {
             }
 
         });
-        game.printGreens();
+        //game.printGreens();
 
         // Game information
         ArrayList<String> green_interracArrayList = new ArrayList<String>();
@@ -48,23 +48,19 @@ public class Visualiser {
             });
         });
         graph.display();
-        add_Grey_Nodes(graph, game);
-
+        //add_Grey_Nodes(graph, game);
     }
 
-    public static void add_Grey_Nodes(Graph graph, Game game) {
+    public void add_Grey_Nodes(Graph graph, Game game) {
         Grey grey = game.greys.get(0);
         Node node = graph.addNode(String.valueOf(grey.id));
         node.setAttribute("ui.label", String.valueOf(grey.id) + ":" + grey.isSpy);
         node.setAttribute("ui.class", "grey");
-
         explore(graph.getNode("0"));
-
         graph.removeNode(node);
-
     }
 
-    public static void explore(Node source) {
+    public void explore(Node source) {
         Iterator<? extends Node> k = source.getBreadthFirstIterator();
         while (k.hasNext()) {
             Node next = k.next();
@@ -75,14 +71,14 @@ public class Visualiser {
         }
     }
 
-    protected static void sleep() {
+    protected void sleep() {
         try {
             Thread.sleep(600);
         } catch (Exception e) {
         }
     }
 
-    protected static String styleSheet = "node {size-mode:dyn-size;fill-color: green;text-size: 50;text-alignment: justify;z-index:0;}"
+    protected String styleSheet = "node {size-mode:dyn-size;fill-color: green;text-size: 50;text-alignment: justify;z-index:0;}"
             +
             "node.red {fill-color: red;}" +
             "node.grey {fill-color: grey;}" +

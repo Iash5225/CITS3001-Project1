@@ -88,7 +88,6 @@ public class Game {
         System.out.println("=========================================");
         System.out.print("\033[47m");
         System.out.println("Round " + current_round + "\033[0m");
-        change_following();
         System.out.println("Number of Grey Agents Active: " + greys.size());
         game_status();
         while (!is_blues_turn) {
@@ -134,7 +133,7 @@ public class Game {
                         default:
                             break;
                     }
-                    // System.out.println("TODO: send message from red");
+                    
                     System.out.print("\033[0m");
                     sendRedMessage(level, false);
                     is_blues_turn = true;
@@ -200,13 +199,13 @@ public class Game {
                         default:
                             break;
                     }
-                    // System.out.println("TODO: send message from blue");
+                    
                     System.out.print("\033[0m");
                     sendBlueMessage(level, false);
                     is_blues_turn = false;
                     break;
                 case 2:
-                    // System.out.println("TODO: add a grey");
+                   
                     System.out.print("\033[0;35m");
                     release_greys();
                     System.out.print("\033[0m");
@@ -227,6 +226,7 @@ public class Game {
             }
 
         }
+        change_following();
     }
 
     /**
@@ -361,7 +361,7 @@ public class Game {
     }
 
     private void release_greys() {
-        // TODO Auto-generated method stub
+       
         Grey grey_agent = greys.get(0);
         if (grey_agent.isSpy) {
             System.out.println("A RED spy has been released");
@@ -401,7 +401,6 @@ public class Game {
 
     private void sendBlueMessage(int level, boolean Grey_turn) {
 
-        // TODO Auto-generated method stub
         for (Green g : greens) {
             // if green doesn't follow red, make sure they
             if (!g.followsRed) {

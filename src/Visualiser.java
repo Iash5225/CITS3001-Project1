@@ -89,9 +89,10 @@ public class Visualiser {
         }
     }
 
-    protected String styleSheet = "node {size-mode:dyn-size;fill-color: green;text-size: 50;text-alignment: justify;z-index:0;}"
+    protected String styleSheet = "node {fill-color: green;text-size: 30;text-alignment: justify;z-index:0;size:20px;}"
             +
             "node.red {fill-color: red;}" +
             "node.grey {fill-color: grey;}" +
+            "node.green {fill-color: green;}" +
             "node.marked {fill-color: purple;arrow-size: 3px, 2px;}";
 }

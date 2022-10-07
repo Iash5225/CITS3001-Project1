@@ -51,6 +51,7 @@ public class PlayerBlue implements Player {
                     if (level >= 1 && level <= 5) {
                         set_uncertainty(level);
                         move = 1;
+                        System.out.print("\033[0;35m"); // change color to purple
                         System.out.println("Blue sends a message of level " + level);
                     } else {
                         System.out.print("\033[0;31m"); // change text color to red
@@ -58,6 +59,7 @@ public class PlayerBlue implements Player {
                     }
                     break;
                 case 2:
+                    System.out.print("\033[0;35m"); // change color to purple
                     System.out.println("Blue does nothing");
                     move = 2;
                     break;
@@ -65,6 +67,9 @@ public class PlayerBlue implements Player {
                     System.out.print("\033[0;37m"); // change color to grey
                     System.out.println("Blue releases a Grey Agent");
                     move = 3;
+                    break;
+                case 9:
+                    game.print_debug_menu();
                     break;
                 default:
                     System.out.print("\033[0;31m"); // change text color to red

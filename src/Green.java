@@ -25,14 +25,14 @@ public class Green extends GameObject {
         System.out.println("]");
     }
 
-    public void calcNewUncertainty() {
-        double sum = 0;
-        for (Green g : friends) {
-            sum += g.uncertainty;
-        }
-        double avg = sum / friends.size();
-        du = (avg - uncertainty) / 2;
-    }
+    // public void calcNewUncertainty() {
+    // double sum = 0;
+    // for (Green g : friends) {
+    // sum += g.uncertainty;
+    // }
+    // double avg = sum / friends.size();
+    // du = (avg - uncertainty) / 2;
+    // }
 
     /**
      * If 2 green agents have the same vote status, no change occurs.
@@ -41,25 +41,30 @@ public class Green extends GameObject {
      * then the person vote that has changed will get a new uncertainty thats the
      * average of the 2.
      */
-    public void green_interraction() {
-        for (Green FRIEND : friends) {
-            double newUncertainty = (uncertainty + FRIEND.uncertainty) / 2;
+    // public void green_interraction() {
+    // for (Green FRIEND : friends) {
+    // double newUncertainty = (uncertainty + FRIEND.uncertainty) / 2;
 
-            // if leader is more certain that they are going to vote, leader infuences
-            // friend
-            if (uncertainty < FRIEND.uncertainty) {
-                FRIEND.willVote = willVote;
-                FRIEND.uncertainty = newUncertainty;
-            } else if (uncertainty == FRIEND.uncertainty) {
-                // do nothing
-                continue;
-            } else {
-                willVote = FRIEND.willVote;
-                uncertainty = newUncertainty;
-            }
-        }
-    }
+    // // if leader is more certain that they are going to vote, leader infuences
+    // // friend
+    // if (uncertainty < FRIEND.uncertainty) {
+    // FRIEND.willVote = willVote;
+    // FRIEND.uncertainty = newUncertainty;
+    // } else if (uncertainty == FRIEND.uncertainty) {
+    // // do nothing
+    // continue;
+    // } else {
+    // willVote = FRIEND.willVote;
+    // uncertainty = newUncertainty;
+    // }
+    // }
+    // }
 
+    /*
+     * Updates the uncertainty of the green agent and resets the du value to 0
+     * also triggers the green to change their vote status if they are uncertain
+     * enough
+     */
     public void update() {
         uncertainty += du;
         du = 0;

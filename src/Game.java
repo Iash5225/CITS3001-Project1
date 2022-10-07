@@ -158,10 +158,12 @@ public class Game {
     }
 
     private void print_bar(String label, String color, int n) {
+        // bar unicode
+        // https://www.compart.com/en/unicode/block/U+2580
         System.out.printf("%-20s:", label);
         System.out.print(color);
         for (int i = 0; i < n; i++) {
-            System.out.print(" ");
+            System.out.print("\u2584");
         }
         System.out.println("\033[0m");
     }
@@ -172,8 +174,8 @@ public class Game {
         int n_non_voters = greens.size() - n_voters;
         System.out.println("=========================================");
 
-        print_bar("Voters", "\033[44m", n_voters);
-        print_bar("Non-voters", "\033[41m", n_non_voters);
+        print_bar("Voters", "\033[34m", n_voters);
+        print_bar("Non-voters", "\033[31m", n_non_voters);
 
         System.out.println("=========================================");
 
@@ -186,8 +188,54 @@ public class Game {
                 n_non_followers++;
             }
         }
-        print_bar("Red followers", "\033[41m", n_red_followers);
-        print_bar("Non followers", "\033[44m", n_non_followers);
+        print_bar("Red followers", "\033[31m", n_red_followers);
+        print_bar("Non followers", "\033[34m", n_non_followers);
+
+    }
+
+    public void print_debug_menu() {
+        System.out.println("=========================================");
+        System.out.println("Debug menu:");
+        System.out.println("1. Print green info");
+        System.out.println("2. Plot green uncertainty distribution");
+        System.out.println("=========================================");
+
+        System.out.print("Enter your choice: ");
+        int choice = sc.nextInt();
+        while (true) {
+            boolean valid_choice = true;
+            switch (choice) {
+                case 1:
+                    printGreens();
+                    break;
+                case 2:
+                    plot_green_uncertainty_distribution(10);
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+                    valid_choice = false;
+                    break;
+            }
+            if (valid_choice) {
+                break;
+            }
+        }
+
+    }
+
+    private void plot_green_uncertainty_distribution(int n_intervals) {
+        System.out.println("Green uncertainty distribution:");
+        int[] bins = new int[n_intervals];
+        for (Green green : greens) {
+            int bin = (int) ((green.uncertainty + 1) * (double) n_intervals / 2);
+            bins[bin]++;
+        }
+        for (int i = 0; i < bins.length; i++) {
+            Double lb = -1.0 + i * 2.0 / (double) n_intervals;
+            String range = String.format("(%.1f)", lb) + " - "
+                    + String.format("(%.1f)", lb + 2.0 / (double) n_intervals);
+            print_bar(range, "\033[34m", bins[i]);
+        }
 
     }
 
@@ -292,14 +340,26 @@ public class Game {
         }
     }
 
-    private void influence_green(Double uncertainty, Boolean willVote, Green g) {
-        // if they share the same opinion, g's uncertainty decreases
-        if (g.willVote == willVote) {
-            g.du -= 0.1;
+    public void green_turn() {
+        for (Green g : greens) {
+            g.update();
         }
-        // if they don't share the same opinion, then if g's uncertainty is above
-        // uncertainty, g's uncertainty increases
-        else if (g.uncertainty > uncertainty) {
+        for (Green g1 : greens) {
+            for (Green g2 : g1.friends) {
+                influence_green(g1.uncertainty, g1.followsRed, g2);
+            }
+        }
+    }
+
+    private void influence_green(Double uncertainty, Boolean willVote, Green g) {
+        // if they are more uncertain
+        if (g.uncertainty > uncertainty) {
+            // if they share the same opinion
+            if (g.willVote == willVote) {
+
+                g.du -= 0.1;
+            }
+        } else {
             g.du += 0.1;
         }
     }

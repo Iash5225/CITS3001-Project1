@@ -18,6 +18,5 @@ public class App {
         System.out.print("\033[1;93m");
         System.out.println("Game over");
         System.out.print("\033[0m");
-
     }
 }

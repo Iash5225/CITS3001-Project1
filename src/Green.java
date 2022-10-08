@@ -17,22 +17,22 @@ public class Green extends GameObject {
 
     public void print() {
         String u_rounded = String.format("%.2f", uncertainty);
-        System.out.print(id + " " + u_rounded + " " + willVote + " " + followsRed);
-        System.out.print(" [ ");
+        System.out.printf("%-2d | %-11s | %-8s | %-10s", id, u_rounded, willVote, followsRed);
+        System.out.print(" | [ ");
         for (Green g : friends) {
             System.out.print(g.id + " ");
         }
         System.out.println("]");
     }
 
-    public void calcNewUncertainty() {
-        double sum = 0;
-        for (Green g : friends) {
-            sum += g.uncertainty;
-        }
-        double avg = sum / friends.size();
-        du = (avg - uncertainty) / 2;
-    }
+    // public void calcNewUncertainty() {
+    // double sum = 0;
+    // for (Green g : friends) {
+    // sum += g.uncertainty;
+    // }
+    // double avg = sum / friends.size();
+    // du = (avg - uncertainty) / 2;
+    // }
 
     /**
      * If 2 green agents have the same vote status, no change occurs.
@@ -41,28 +41,35 @@ public class Green extends GameObject {
      * then the person vote that has changed will get a new uncertainty thats the
      * average of the 2.
      */
-    public void green_interraction() {
-        for (Green FRIEND : friends) {
-            double newUncertainty = (uncertainty + FRIEND.uncertainty) / 2;
+    // public void green_interraction() {
+    // for (Green FRIEND : friends) {
+    // double newUncertainty = (uncertainty + FRIEND.uncertainty) / 2;
 
-            // if leader is more certain that they are going to vote, leader infuences
-            // friend
-            if (uncertainty < FRIEND.uncertainty) {
-                FRIEND.willVote = willVote;
-                FRIEND.uncertainty = newUncertainty;
-            } else if (uncertainty == FRIEND.uncertainty) {
-                // do nothing
-                continue;
-            } else {
-                willVote = FRIEND.willVote;
-                uncertainty = newUncertainty;
-            }
-        }
-    }
+    // // if leader is more certain that they are going to vote, leader infuences
+    // // friend
+    // if (uncertainty < FRIEND.uncertainty) {
+    // FRIEND.willVote = willVote;
+    // FRIEND.uncertainty = newUncertainty;
+    // } else if (uncertainty == FRIEND.uncertainty) {
+    // // do nothing
+    // continue;
+    // } else {
+    // willVote = FRIEND.willVote;
+    // uncertainty = newUncertainty;
+    // }
+    // }
+    // }
 
+    /*
+     * Updates the uncertainty of the green agent and resets the du value to 0
+     * also triggers the green to change their vote status if they are uncertain
+     * enough
+     */
     public void update() {
         uncertainty += du;
         du = 0;
+        uncertainty = Math.min(uncertainty, 0.999999);
+        uncertainty = Math.max(uncertainty, -1);
         if (Math.random() < uncertainty) {
             willVote = !willVote;
         }

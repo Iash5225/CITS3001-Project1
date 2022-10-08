@@ -396,7 +396,7 @@ public class Game {
             change_votes(Double.MAX_VALUE);
         } else {
             change_votes(Min_Uncertainty);
-        }
+        } 
     }
 
     private void sendBlueMessage(int level, boolean Grey_turn) {

@@ -64,9 +64,6 @@ public class Game {
         current_round = 0;
         is_blues_turn = false;
 
-        // set number of rounds to 10
-        // n_rounds = 10;
-
         // set scanner
         sc = new Scanner(System.in);
     }
@@ -137,16 +134,13 @@ public class Game {
             System.out.println("Red lost all followers");
             System.exit(0);
         }
-
-        // add green interracting here
-        // TODO add green interractng here, and the rest of the game status
-        // calculate new uncertainty ,and deal with the votes
-
         System.out.println("Number of red followers: " + number_of_red_followers);
         System.out.println("Number of blue followers: " + number_of_blue_followers);
-
     }
 
+    /**
+     * Returns the number of green that will vote
+     */
     public int number_of_voting_greens() {
         int count = 0;
         for (Green g : greens) {
@@ -157,6 +151,9 @@ public class Game {
         return count;
     }
 
+    /**
+     * Print the bar chart of the uncertainties
+     */
     private void print_bar(String label, String color, int n) {
         // bar unicode
         // https://www.compart.com/en/unicode/block/U+2580
@@ -223,6 +220,10 @@ public class Game {
 
     }
 
+    /**
+     * Plots the green uncertainty distribution
+     * @param n_intervals
+     */
     public void plot_green_uncertainty_distribution(int n_intervals) {
         System.out.println("Green uncertainty distribution:");
         int[] bins = new int[n_intervals];

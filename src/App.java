@@ -1,6 +1,6 @@
 public class App {
     public static void main(String[] args) throws Exception {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             // create a new game
             Game game = new Game(10, 0.3, 3, 0.33, -1, 0, 0.8);
             Visualiser visualiser = new Visualiser();
@@ -28,7 +28,7 @@ public class App {
             // game.game_status();
             // game.green_voting_day();
             // game.printGreens();
-            // game.plot_green_uncertainty_distribution(10);
+            game.plot_green_uncertainty_distribution(10);
             game.who_won();
         }
 

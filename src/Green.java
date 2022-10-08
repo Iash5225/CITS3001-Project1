@@ -68,6 +68,8 @@ public class Green extends GameObject {
     public void update() {
         uncertainty += du;
         du = 0;
+        uncertainty = Math.min(uncertainty, 0.999999);
+        uncertainty = Math.max(uncertainty, -1);
         if (Math.random() < uncertainty) {
             willVote = !willVote;
         }

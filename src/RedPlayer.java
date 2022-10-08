@@ -76,7 +76,13 @@ public class RedPlayer implements Player {
     }
 
     private int get_next_move_agent(Game game) {
-        return 0;
+        int move = -1;
+
+        int[] options = game.get_valid_moves("red");
+        int choice = (int) (Math.random() * options.length);
+        set_uncertainty(choice);
+        move = 1;
+        return move;
     }
 
     private void set_uncertainty(int msg_level) {

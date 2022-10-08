@@ -58,7 +58,7 @@ public class Game {
 
         // create red and blue
         red = new Red();
-        blue = new Blue(100);
+        blue = new Blue(100, 8);
 
         // set current round to 0
         current_round = 0;
@@ -223,7 +223,7 @@ public class Game {
 
     }
 
-    private void plot_green_uncertainty_distribution(int n_intervals) {
+    public void plot_green_uncertainty_distribution(int n_intervals) {
         System.out.println("Green uncertainty distribution:");
         int[] bins = new int[n_intervals];
         for (Green green : greens) {
@@ -264,13 +264,15 @@ public class Game {
      */
     public void red_turn(RedPlayer p) {
         // set color to red
-        System.out.print("\033[0;31m");
-        System.out.println("Red's turn");
-        // reset color
-        System.out.print("\033[0m");
+        if (!p.isAgent) {
+            System.out.print("\033[0;31m");
+            System.out.println("Red's turn");
+            // reset color
+            System.out.print("\033[0m");
 
-        // print game info for players
-        print_game_info_for_players();
+            // print game info for players
+            print_game_info_for_players();
+        }
 
         // get red's action
         int action = p.get_next_move(this);
@@ -301,7 +303,7 @@ public class Game {
         if (g.willVote) {
             if (g.uncertainty < -uncertainty) {
                 if (2 * Math.random() < g.uncertainty + 1) {
-                    g.willVote = false;
+                    g.followsRed = false;
                 }
             }
         }
@@ -311,15 +313,17 @@ public class Game {
      * Blue's turn.
      */
     public void blue_turn(BluePlayer p) {
-        // set color to blue
-        System.out.print("\033[0;34m");
-        System.out.println("Blue's turn");
-        // reset color
-        System.out.print("\033[0m");
 
-        // print game info for players
-        if (!p.isAgent)
+        if (!p.isAgent) {
+            // set color to blue
+            System.out.print("\033[0;34m");
+            System.out.println("Blue's turn");
+            // reset color
+            System.out.print("\033[0m");
+
+            // print game info for players
             print_game_info_for_players();
+        }
 
         // get blue's action
         int action = p.get_next_move(this);
@@ -328,11 +332,17 @@ public class Game {
                 for (Green g : greens) {
                     influence_green(p.uncertainty, true, g);
                 }
+                Double cost = (1.0 - p.uncertainty) / 2 * blue.energy_cost * 5;
+                blue.LoseEnergy(cost);
                 break;
             case 2:
                 break;
             case 3:
-                release_grey();
+                if (greys.size() > 0) {
+                    release_grey();
+                } else {
+                    System.out.println("No grey to release");
+                }
                 break;
             default:
                 System.out.println("Invalid action");
@@ -351,16 +361,20 @@ public class Game {
         }
     }
 
+    /*
+     * This function governs all interactions between agents. It is called by
+     * red, blue, green and grey.
+     */
     private void influence_green(Double uncertainty, Boolean willVote, Green g) {
         // if they are more uncertain
         if (g.uncertainty > uncertainty) {
             // if they share the same opinion
             if (g.willVote == willVote) {
 
-                g.du -= 0.1;
+                g.du -= (g.uncertainty - uncertainty) / 5;
+            } else {
+                g.du += 0.1;
             }
-        } else {
-            g.du += 0.1;
         }
     }
 
@@ -462,6 +476,48 @@ public class Game {
             change_votes(Double.MAX_VALUE);
         } else {
             change_votes(Min_Uncertainty);
+        }
+    }
+
+    public int[] get_valid_moves(String player) {
+        switch (player) {
+            case "red":
+                return new int[] { 1, 2, 3, 4, 5 };
+            case "blue":
+                double remaining_energy = blue.getEnergy();
+                int max_level = (int) Math.floor(remaining_energy / 8);
+                int[] valid_moves = new int[max_level + 1];
+                for (int i = 0; i < max_level + 1; i++) {
+                    valid_moves[i] = i;
+                }
+                return valid_moves;
+            default:
+                System.out.println("Invalid player");
+                System.exit(1);
+        }
+        return null;
+    }
+
+    public void who_won() {
+        int red_votes = 0;
+        int blue_votes = 0;
+        for (Green g : greens) {
+            if (g.willVote) {
+                red_votes++;
+            } else {
+                blue_votes++;
+            }
+        }
+        if (red_votes > blue_votes) {
+            System.out.print("\033[0;31m"); // Red
+            System.out.println("Red wins " + red_votes + " to " + blue_votes);
+            System.out.print("\033[0m"); // Reset
+        } else if (blue_votes > red_votes) {
+            System.out.print("\033[0;34m"); // Blue
+            System.out.println("Blue wins " + blue_votes + " to " + red_votes);
+            System.out.print("\033[0m"); // Reset
+        } else {
+            System.out.println("Tie");
         }
     }
 

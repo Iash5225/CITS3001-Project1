@@ -28,6 +28,7 @@ public class BluePlayer implements Player {
         System.out.print("\033[0m"); // reset color
 
         while (move == -1) {
+            System.out.println("Blue has " + game.blue.energy + " energy left");
             System.out.println("Blue's options:");
             System.out.println("(1) Send a message");
             System.out.println("(2) Do nothing");
@@ -49,10 +50,15 @@ public class BluePlayer implements Player {
                     System.out.print("\033[0m"); // reset color
 
                     if (level >= 1 && level <= 5) {
-                        set_uncertainty(level);
-                        move = 1;
-                        System.out.print("\033[0;35m"); // change color to purple
-                        System.out.println("Blue sends a message of level " + level);
+                        if (game.blue.energy >= game.blue.energy_cost * level) {
+                            set_uncertainty(level);
+                            move = 1;
+                            System.out.print("\033[0;35m"); // change color to purple
+                            System.out.println("Blue sends a message of level " + level);
+                        } else {
+                            System.out.print("\033[0;31m"); // change text color to red
+                            System.out.println("Not enough energy to send a message of level " + level);
+                        }
                     } else {
                         System.out.print("\033[0;31m"); // change text color to red
                         System.out.println("Invalid message level");
@@ -83,8 +89,13 @@ public class BluePlayer implements Player {
     }
 
     private int get_next_move_agent(Game game) {
-        // TODO: implement this
-        return 0;
+        int move = -1;
+
+        int[] options = game.get_valid_moves("blue");
+        int choice = (int) (Math.random() * options.length);
+        set_uncertainty(choice);
+        move = 1;
+        return move;
     }
 
     private void set_uncertainty(int msg_level) {

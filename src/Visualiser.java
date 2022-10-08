@@ -40,8 +40,7 @@ public class Visualiser {
                     graph.addEdge(String.valueOf(green.id) + String.valueOf(friend.id), String.valueOf(green.id),
                             String.valueOf(friend.id));
                     StringBuilder EDGE_ID = new StringBuilder();
-                    EDGE_ID.append(String.valueOf(green.id) + String.valueOf(friend.id));
-                    EDGE_ID.reverse();
+                    EDGE_ID.append(String.valueOf(friend.id)+ String.valueOf(green.id));
                     green_interracArrayList.add(EDGE_ID.toString());
                 }
             });

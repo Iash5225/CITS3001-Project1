@@ -322,9 +322,7 @@ public class BellmanFord implements Algorithm {
 	 */
 	public double getShortestPathValue(Node target) {
 		Double d = (double) target.getAttribute(identifier+".distance");
-		if (d != null)
-			return d;
-		return Double.POSITIVE_INFINITY;
+		return d;
 	}
 	
 	/**

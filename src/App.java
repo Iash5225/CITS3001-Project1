@@ -10,8 +10,8 @@ public class App {
             visualiser.setup();
             visualiser.graph.display();
 
-            RedPlayer red = new RedPlayer(false);
-            BluePlayer blue = new BluePlayer(false);
+            RedPlayer red = new RedPlayer(true);
+            BluePlayer blue = new BluePlayer(true);
 
             while (game.current_round < game.n_rounds) {
                 game.red_turn(red);
@@ -22,10 +22,6 @@ public class App {
                 visualiser.game = game;
                 visualiser.update_visualiser();
             }
-
-            // game.game_status();
-            // game.green_voting_day();
-            // game.printGreens();
             game.plot_green_uncertainty_distribution(10);
             game.who_won();
         }

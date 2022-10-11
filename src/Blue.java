@@ -6,7 +6,7 @@ public class Blue extends GameObject {
     public Blue(double energy, double energy_cost) {
         super();
         this.energy = energy;
-        this.energy_cost = 8.0;
+        this.energy_cost = energy_cost;
     }
 
     public double getEnergy() {

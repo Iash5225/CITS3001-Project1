@@ -64,9 +64,6 @@ public class Game {
         current_round = 0;
         is_blues_turn = false;
 
-        // set number of rounds to 10
-        // n_rounds = 10;
-
         // set scanner
         sc = new Scanner(System.in);
     }
@@ -137,16 +134,13 @@ public class Game {
             System.out.println("Red lost all followers");
             System.exit(0);
         }
-
-        // add green interracting here
-        // TODO add green interractng here, and the rest of the game status
-        // calculate new uncertainty ,and deal with the votes
-
         System.out.println("Number of red followers: " + number_of_red_followers);
         System.out.println("Number of blue followers: " + number_of_blue_followers);
-
     }
 
+    /**
+     * Returns the number of green that will vote
+     */
     public int number_of_voting_greens() {
         int count = 0;
         for (Green g : greens) {
@@ -157,6 +151,9 @@ public class Game {
         return count;
     }
 
+    /**
+     * Print the bar chart of the uncertainties
+     */
     private void print_bar(String label, String color, int n) {
         // bar unicode
         // https://www.compart.com/en/unicode/block/U+2580
@@ -223,6 +220,10 @@ public class Game {
 
     }
 
+    /**
+     * Plots the green uncertainty distribution
+     * @param n_intervals
+     */
     public void plot_green_uncertainty_distribution(int n_intervals) {
         System.out.println("Green uncertainty distribution:");
         int[] bins = new int[n_intervals];
@@ -395,22 +396,23 @@ public class Game {
         }
     }
 
+
     /**
      * Green talking to eachother on voting day
      */
+
     public void green_voting_day() {
         int[] interracted_greens = new int[greens.size()];
         for (int i = 0; i < greens.size(); i++) {
             interracted_greens[i] = 0;
         }
         for (int i = 0; i < interracted_greens.length; i++) {
-            // Green Current = greens.get(i);
+            //Green Current = greens.get(i);
             for (int j = 0; j < greens.get(i).friends.size(); j++) {
                 // Green Friend = Current.friends.get(j);
                 if (interracted_greens[greens.get(i).friends.get(j).id] == 0) {
                     interracted_greens[greens.get(i).friends.get(j).id] = 1;
-                    System.out.println(
-                            "Green " + greens.get(i).id + " is talking to Green " + greens.get(i).friends.get(j).id);
+                    System.out.println("Green " + greens.get(i).id + " is talking to Green " + greens.get(i).friends.get(j).id);
                     double newUncertainty = (greens.get(i).uncertainty + greens.get(i).friends.get(j).uncertainty) / 2;
 
                     // if leader is more certain that they are going to vote, leader infuences

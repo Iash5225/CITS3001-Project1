@@ -3,7 +3,7 @@ bin/*
 
 out/
 
-
+gs-ui-javafx-2.0/
 .idea/
 
 templates/

@@ -6,14 +6,12 @@ public class App {
             Visualiser visualiser = new Visualiser();
             visualiser.game = game;
             game.printGreens();
-            
+
             visualiser.setup();
             visualiser.graph.display();
 
-            
-
-            RedPlayer red = new RedPlayer(true);
-            BluePlayer blue = new BluePlayer(true);
+            RedPlayer red = new RedPlayer(false);
+            BluePlayer blue = new BluePlayer(false);
 
             while (game.current_round < game.n_rounds) {
                 game.red_turn(red);

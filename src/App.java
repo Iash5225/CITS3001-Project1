@@ -1,9 +1,9 @@
 public class App {
     public static void main(String[] args) throws Exception {
+        Visualiser visualiser = new Visualiser();
         for (int i = 0; i < 1; i++) {
             // create a new game
             Game game = new Game(10, 0.3, 3, 0.33, -1, 0, 0.8);
-            Visualiser visualiser = new Visualiser();
             visualiser.game = game;
             game.printGreens();
 

@@ -7,7 +7,7 @@ public class Game {
     public Blue blue;
     public Scanner sc;
 
-    public int n_rounds = 5;
+    public int n_rounds = 50;
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
@@ -22,13 +22,13 @@ public class Game {
      * @param n_green         number of green agents
      * @param prob_edge       probability of an edge between 2 green agents
      * @param n_grey          number of grey agents
-     * @param prob_spy        probability of a grey agent being a spy
+     * @param n_spys          probability of a grey agent being a spy
      * @param uncertainty_lb  lower bound of uncertainty
      * @param uncertainty_ub  upper bound of uncertainty
      * @param percentage_vote percentage of green agents that will vote
      * @return Game object
      */
-    public Game(int n_green, double prob_edge, int n_grey, double prob_spy, double uncertainty_lb,
+    public Game(int n_green, double prob_edge, int n_grey, int n_spys, double uncertainty_lb,
             double uncertainty_ub, double percentage_vote) {
 
         // create n_green greens with parameters
@@ -50,15 +50,18 @@ public class Game {
 
         // create n_grey greys with parameters
         greys = new Vector<Grey>();
-        for (int i = 0; i < n_grey; i++) {
-            boolean isSpy = Math.random() < prob_spy;
-            greys.add(new Grey(isSpy));
+        for (int i = 0; i < n_grey - n_spys; i++) {
+            greys.add(new Grey(false));
         }
+        for (int i = 0; i < n_spys; i++) {
+            greys.add(new Grey(true));
+        }
+
         number_of_greys = n_grey;
 
         // create red and blue
         red = new Red();
-        blue = new Blue(100, 8);
+        blue = new Blue(0, 1);
 
         // set current round to 0
         current_round = 0;
@@ -197,9 +200,9 @@ public class Game {
         System.out.println("2. Plot green uncertainty distribution");
         System.out.println("=========================================");
 
-        System.out.print("Enter your choice: ");
-        int choice = sc.nextInt();
         while (true) {
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
             boolean valid_choice = true;
             switch (choice) {
                 case 1:
@@ -222,6 +225,7 @@ public class Game {
 
     /**
      * Plots the green uncertainty distribution
+     * 
      * @param n_intervals
      */
     public void plot_green_uncertainty_distribution(int n_intervals) {
@@ -241,25 +245,6 @@ public class Game {
     }
 
     // ================================ GAME LOGIC ================================
-    /**
-     * Checks the votes of the greens.
-     */
-    private void change_votes(double uncertainty) {
-        int count = 0;
-        if (current_round != 1) {
-            for (Green g : greens) {
-                // if green has an uncertainty above 0.75, and they will switch
-                // their votes
-                if (g.uncertainty > uncertainty) {
-                    g.willVote = !g.willVote;
-                    count++;
-                }
-            }
-        }
-        System.out.println("Number of agents who have changed their votes: " +
-                count);
-    }
-
     /**
      * Red's turn.
      */
@@ -295,17 +280,19 @@ public class Game {
     }
 
     /**
-     * Checks if a green will unfollow red.
+     * Checks if a green will unfollow red basedon red's uncertainty
      * 
      * @param g
      * @param uncertainty
      */
     private void unfollow(Green g, double uncertainty) {
         if (g.willVote) {
-            if (g.uncertainty < -uncertainty) {
-                if (2 * Math.random() < g.uncertainty + 1) {
-                    g.followsRed = false;
-                }
+            double c_0_1 = (uncertainty + 1) / -2;
+            double gc_0_1 = (g.uncertainty + 1) / -2;
+            double dist_squared = (Math.pow(c_0_1, 2) + Math.pow(gc_0_1, 2));
+            double prob = dist_squared / 2;
+            if (Math.random() < prob) {
+                g.followsRed = false;
             }
         }
     }
@@ -357,7 +344,7 @@ public class Game {
         }
         for (Green g1 : greens) {
             for (Green g2 : g1.friends) {
-                influence_green(g1.uncertainty, g1.followsRed, g2);
+                influence_green(g1.uncertainty, g1.willVote, g2);
             }
         }
     }
@@ -371,16 +358,15 @@ public class Game {
         if (g.uncertainty > uncertainty) {
             // if they share the same opinion
             if (g.willVote == willVote) {
-
                 g.du -= (g.uncertainty - uncertainty) / 5;
             } else {
-                g.du += 0.1;
+                g.du += (g.uncertainty - uncertainty) / 5;
             }
         }
     }
 
     private void release_grey() {
-        Grey grey_agent = greys.remove(0);
+        Grey grey_agent = greys.remove((int) Math.random() * greys.size());
         if (grey_agent.isSpy) {
             System.out.println("A RED spy has been released");
             for (Green g : greens) {
@@ -396,98 +382,13 @@ public class Game {
         }
     }
 
-
-    /**
-     * Green talking to eachother on voting day
-     */
-
-    public void green_voting_day() {
-        int[] interracted_greens = new int[greens.size()];
-        for (int i = 0; i < greens.size(); i++) {
-            interracted_greens[i] = 0;
-        }
-        for (int i = 0; i < interracted_greens.length; i++) {
-            //Green Current = greens.get(i);
-            for (int j = 0; j < greens.get(i).friends.size(); j++) {
-                // Green Friend = Current.friends.get(j);
-                if (interracted_greens[greens.get(i).friends.get(j).id] == 0) {
-                    interracted_greens[greens.get(i).friends.get(j).id] = 1;
-                    System.out.println("Green " + greens.get(i).id + " is talking to Green " + greens.get(i).friends.get(j).id);
-                    double newUncertainty = (greens.get(i).uncertainty + greens.get(i).friends.get(j).uncertainty) / 2;
-
-                    // if leader is more certain that they are going to vote, leader infuences
-                    // friend
-                    if (greens.get(i).uncertainty < greens.get(i).friends.get(j).uncertainty) {
-                        greens.get(i).friends.get(j).willVote = greens.get(i).willVote;
-                        greens.get(i).friends.get(j).uncertainty = newUncertainty;
-                    } else if (greens.get(i).uncertainty == greens.get(i).friends.get(j).uncertainty) {
-                        // do nothing
-                        continue;
-                    } else {
-                        greens.get(i).willVote = greens.get(i).friends.get(j).willVote;
-                        greens.get(i).uncertainty = newUncertainty;
-                    }
-                }
-            }
-        }
-    }
-
-    private void sendRedMessage(int level, boolean grey_turn) {
-        for (Green g : greens) {
-            // skip if green doesn't follow red
-            if (!g.followsRed) {
-                continue;
-            }
-
-            if (g.willVote) {
-                // check if the addition of the uncertainty is greater than 1
-                double newUncertainty = Math.round((g.uncertainty + 0.1 * level) * 100.0) / 100.0;
-                if (newUncertainty <= 1) {
-                    g.uncertainty = newUncertainty;
-                }
-            }
-        }
-        if (grey_turn) {
-            change_votes(Double.MAX_VALUE);
-        } else {
-            change_votes(Min_Uncertainty);
-        }
-    }
-
-    private void sendBlueMessage(int level, boolean Grey_turn) {
-        if (blue.getEnergy() < level * 8) {
-            System.out.println("Not enough energy to send message");
-            return;
-        }
-        blue.LoseEnergy(level * 8);
-
-        for (Green g : greens) {
-            if (g.willVote) {
-                // check greens uncertainty
-
-                // Check if the uncertainty is greater than the "high uncertainty" threshold
-                // double EnergyLoss = Math.round((0.1 * level) * 100.0) / 100.0;
-
-                double newUncertainty = Math.round((g.uncertainty + 0.1 * level) * 100.0) / 100.0;
-                if (newUncertainty <= 1) {
-                    g.uncertainty = newUncertainty;
-                }
-            }
-        }
-        if (Grey_turn) {
-            change_votes(Double.MAX_VALUE);
-        } else {
-            change_votes(Min_Uncertainty);
-        }
-    }
-
     public int[] get_valid_moves(String player) {
         switch (player) {
             case "red":
                 return new int[] { 1, 2, 3, 4, 5 };
             case "blue":
                 double remaining_energy = blue.getEnergy();
-                int max_level = (int) Math.floor(remaining_energy / 8);
+                int max_level = (int) Math.floor(remaining_energy);
                 int[] valid_moves = new int[max_level + 1];
                 for (int i = 0; i < max_level + 1; i++) {
                     valid_moves[i] = i;
@@ -500,27 +401,17 @@ public class Game {
         return null;
     }
 
-    public void who_won() {
+    public int who_won() {
         int red_votes = 0;
         int blue_votes = 0;
         for (Green g : greens) {
             if (g.willVote) {
-                red_votes++;
-            } else {
                 blue_votes++;
+            } else {
+                red_votes++;
             }
         }
-        if (red_votes > blue_votes) {
-            System.out.print("\033[0;31m"); // Red
-            System.out.println("Red wins " + red_votes + " to " + blue_votes);
-            System.out.print("\033[0m"); // Reset
-        } else if (blue_votes > red_votes) {
-            System.out.print("\033[0;34m"); // Blue
-            System.out.println("Blue wins " + blue_votes + " to " + red_votes);
-            System.out.print("\033[0m"); // Reset
-        } else {
-            System.out.println("Tie");
-        }
+        return blue_votes - red_votes;
     }
 
 }

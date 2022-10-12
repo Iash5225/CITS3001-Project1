@@ -1,9 +1,13 @@
 public class RedPlayer implements Player {
     public boolean isAgent = false;
     public double uncertainty = 0.0;
+    public Agent agent = null;
 
     public RedPlayer(boolean isAgent) {
         this.isAgent = isAgent;
+        if (isAgent) {
+            agent = new Agent();
+        }
     }
 
     public int get_next_move(Game game) {

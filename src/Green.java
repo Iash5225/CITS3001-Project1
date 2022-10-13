@@ -25,40 +25,40 @@ public class Green extends GameObject {
         System.out.println("]");
     }
 
-    // public void calcNewUncertainty() {
-    // double sum = 0;
-    // for (Green g : friends) {
-    // sum += g.uncertainty;
-    // }
-    // double avg = sum / friends.size();
-    // du = (avg - uncertainty) / 2;
-    // }
+    /*
+     * Influence green's uncertainty based on the uncertainty and opinion of the
+     * message
+     */
+    public void influence(Double u, Boolean v) {
+        // if they are more uncertain
+        if (uncertainty > u) {
+            // if they share the same opinion
+            if (willVote == v) {
+                du -= (uncertainty - u) / 5;
+            } else {
+                du += (uncertainty - u) / 5;
+            }
+        }
+    }
 
     /**
-     * If 2 green agents have the same vote status, no change occurs.
-     * if 2 green agents have different vote status, the one with the higher
-     * certainty (more negative value), will change the other's vote status.
-     * then the person vote that has changed will get a new uncertainty thats the
-     * average of the 2.
+     * Checks if a green will unfollow red based on red's uncertainty
+     * 
+     * @param uncertainty
      */
-    // public void green_interraction() {
-    // for (Green FRIEND : friends) {
-    // double newUncertainty = (uncertainty + FRIEND.uncertainty) / 2;
+    public void unfollow(double u) {
+        if (willVote) {
+            double u_0_1 = (u + 1) / 2;
+            double gu_0_1 = (uncertainty + 1) / 2;
+            // the lower the uncertainty, the more likely the green will unfollow
+            // the lower the green's uncertainty, the more likely the green will unfollow
+            double p = u_0_1 * gu_0_1;
 
-    // // if leader is more certain that they are going to vote, leader infuences
-    // // friend
-    // if (uncertainty < FRIEND.uncertainty) {
-    // FRIEND.willVote = willVote;
-    // FRIEND.uncertainty = newUncertainty;
-    // } else if (uncertainty == FRIEND.uncertainty) {
-    // // do nothing
-    // continue;
-    // } else {
-    // willVote = FRIEND.willVote;
-    // uncertainty = newUncertainty;
-    // }
-    // }
-    // }
+            if (Math.random() < Math.pow(p, 2)) {
+                followsRed = false;
+            }
+        }
+    }
 
     /*
      * Updates the uncertainty of the green agent and resets the du value to 0

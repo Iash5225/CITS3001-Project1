@@ -24,7 +24,7 @@ public class RedPlayer implements Player {
         System.out.println("=========================================");
         System.out.print("\033[47m"); // set background to white
         System.out.println("Round " + game.current_round + "\033[0m");
-        System.out.println("Number of Grey Agents Active: " + game.greys.size());
+        System.out.println("Number of Grey Agents Active: " + game.board.greys.size());
 
         System.out.println("===================================");
         System.out.print("\033[0;31m"); // change color to red

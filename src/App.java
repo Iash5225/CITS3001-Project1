@@ -8,9 +8,20 @@ public class App {
         int draws = 0;
 
         int n_unfollows = 0;
-        for (int i = 0; i < (visual ? 1 : 1000); i++) {
+        for (int i = 0; i < (visual ? 1 : Config.N_GAMES); i++) {
             // create a new game
-            Game game = new Game(100, 0.6, 3, 1, -1, 1, 0.5);
+            GameBoard gb = new GameBoard(Config.N_GREENS,
+                    Config.PROB_EDGE,
+                    Config.N_GREY,
+                    Config.N_SPIES,
+                    Config.UNCERTAINTY_LOWER_BOUND,
+                    Config.UNCERTAINTY_UPPER_BOUND,
+                    Config.PROB_VOTE);
+
+            RedPlayer red = new RedPlayer(!visual);
+            BluePlayer blue = new BluePlayer(!visual);
+
+            Game game = new Game(gb, Config.N_ROUNDS, true, red, blue);
 
             if (visual) {
                 Visualiser visualiser = new Visualiser();
@@ -19,9 +30,6 @@ public class App {
 
                 visualiser.setup();
                 visualiser.graph.display();
-
-                RedPlayer red = new RedPlayer(false);
-                BluePlayer blue = new BluePlayer(false);
 
                 while (game.current_round < game.n_rounds) {
                     game.red_turn(red);
@@ -53,20 +61,16 @@ public class App {
                     System.out.println("Tie");
                 }
             } else {
-
-                RedPlayer red = new RedPlayer(true);
-                BluePlayer blue = new BluePlayer(true);
-
                 while (game.current_round < game.n_rounds) {
                     int n_followers_a = 0;
                     int n_followers_b = 0;
-                    for (Green g : game.greens) {
+                    for (Green g : game.board.greens) {
                         if (g.followsRed) {
                             n_followers_a++;
                         }
                     }
                     game.red_turn(red);
-                    for (Green g : game.greens) {
+                    for (Green g : game.board.greens) {
                         if (g.followsRed) {
                             n_followers_b++;
                         }

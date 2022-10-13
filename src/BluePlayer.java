@@ -20,7 +20,7 @@ public class BluePlayer implements Player {
         System.out.println("=========================================");
         System.out.print("\033[47m"); // set background to white
         System.out.println("Round " + game.current_round + "\033[0m");
-        System.out.println("Number of Grey Agents Active: " + game.greys.size());
+        System.out.println("Number of Grey Agents Active: " + game.board.greys.size());
 
         System.out.println("===================================");
         System.out.print("\033[0;34m"); // change color to blue
@@ -28,7 +28,7 @@ public class BluePlayer implements Player {
         System.out.print("\033[0m"); // reset color
 
         while (move == -1) {
-            System.out.println("Blue has " + game.blue_energy + " energy left");
+            System.out.println("Blue has " + game.board.blue_energy + " energy left");
             System.out.println("Blue's options:");
             System.out.println("(1) Send a message");
             System.out.println("(2) Do nothing");
@@ -50,7 +50,7 @@ public class BluePlayer implements Player {
                     System.out.print("\033[0m"); // reset color
 
                     if (level >= 1 && level <= 5) {
-                        if (game.blue_energy >= level) {
+                        if (game.board.blue_energy >= level) {
                             set_uncertainty(level);
                             move = 1;
                             System.out.print("\033[0;35m"); // change color to purple

@@ -28,7 +28,7 @@ public class BluePlayer implements Player {
         System.out.print("\033[0m"); // reset color
 
         while (move == -1) {
-            System.out.println("Blue has " + game.blue.energy + " energy left");
+            System.out.println("Blue has " + game.blue_energy + " energy left");
             System.out.println("Blue's options:");
             System.out.println("(1) Send a message");
             System.out.println("(2) Do nothing");
@@ -50,7 +50,7 @@ public class BluePlayer implements Player {
                     System.out.print("\033[0m"); // reset color
 
                     if (level >= 1 && level <= 5) {
-                        if (game.blue.energy >= game.blue.energy_cost * level) {
+                        if (game.blue_energy >= level) {
                             set_uncertainty(level);
                             move = 1;
                             System.out.print("\033[0;35m"); // change color to purple

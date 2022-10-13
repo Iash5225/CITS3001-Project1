@@ -2,12 +2,11 @@ import java.util.*;
 
 public class Game {
     public Vector<Green> greens;
-    public Red red;
     public Vector<Grey> greys;
-    public Blue blue;
+    public Double blue_energy;
     public Scanner sc;
 
-    public int n_rounds = 50;
+    public int n_rounds = 10;
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
@@ -22,13 +21,13 @@ public class Game {
      * @param n_green         number of green agents
      * @param prob_edge       probability of an edge between 2 green agents
      * @param n_grey          number of grey agents
-     * @param n_spys          probability of a grey agent being a spy
+     * @param n_spies         probability of a grey agent being a spy
      * @param uncertainty_lb  lower bound of uncertainty
      * @param uncertainty_ub  upper bound of uncertainty
      * @param percentage_vote percentage of green agents that will vote
      * @return Game object
      */
-    public Game(int n_green, double prob_edge, int n_grey, int n_spys, double uncertainty_lb,
+    public Game(int n_green, double prob_edge, int n_grey, int n_spies, double uncertainty_lb,
             double uncertainty_ub, double percentage_vote) {
 
         // create n_green greens with parameters
@@ -50,22 +49,21 @@ public class Game {
 
         // create n_grey greys with parameters
         greys = new Vector<Grey>();
-        for (int i = 0; i < n_grey - n_spys; i++) {
+        for (int i = 0; i < n_grey - n_spies; i++) {
             greys.add(new Grey(false));
         }
-        for (int i = 0; i < n_spys; i++) {
+        for (int i = 0; i < n_spies; i++) {
             greys.add(new Grey(true));
         }
 
         number_of_greys = n_grey;
 
-        // create red and blue
-        red = new Red();
-        blue = new Blue(0, 1);
-
         // set current round to 0
         current_round = 0;
         is_blues_turn = false;
+
+        // set blue energy
+        blue_energy = 25.0;
 
         // set scanner
         sc = new Scanner(System.in);
@@ -91,54 +89,6 @@ public class Game {
         }
         System.out.println();
 
-    }
-
-    /**
-     * Prints the status of the game.
-     */
-    public void game_status() {
-        int number_of_red_followers = 0;
-        int number_of_blue_followers = 0;
-        int number_of_red_votes = 0;
-        int number_of_blue_votes = 0;
-        for (Green g : greens) {
-            if (g.followsRed) {
-                number_of_red_followers++;
-            } else {
-                number_of_blue_followers++;
-            }
-        }
-        System.out.println("=========================================");
-        System.out.println("Game status:");
-
-        if (current_round > n_rounds) {
-            if (number_of_red_votes > number_of_blue_votes) {
-                System.out.print("\033[41m");
-                System.out.println("Red wins!" + "\033[0m");
-                System.out.print("\033[0m");
-            } else if (number_of_red_votes < number_of_blue_votes) {
-                System.out.print("\033[44m");
-                System.out.println("Blue wins!" + "\033[0m");
-                System.out.print("\033[0m");
-            } else {
-                System.out.println("Tie!");
-            }
-        }
-
-        if (blue.LostALLEnergy()) {
-
-            System.out.print("\033[41m");
-            System.out.println("Red wins!" + "\033[0m");
-            System.out.println("Blue lost all energy");
-            System.exit(0);
-        } else if (number_of_red_followers == 0) {
-            System.out.print("\033[44m");
-            System.out.println("Blue wins!" + "\033[0m");
-            System.out.println("Red lost all followers");
-            System.exit(0);
-        }
-        System.out.println("Number of red followers: " + number_of_red_followers);
-        System.out.println("Number of blue followers: " + number_of_blue_followers);
     }
 
     /**
@@ -290,7 +240,7 @@ public class Game {
             double c_0_1 = (uncertainty + 1) / -2;
             double gc_0_1 = (g.uncertainty + 1) / -2;
             double dist_squared = (Math.pow(c_0_1, 2) + Math.pow(gc_0_1, 2));
-            double prob = dist_squared / 2;
+            double prob = Math.pow(dist_squared / 2, 2);
             if (Math.random() < prob) {
                 g.followsRed = false;
             }
@@ -320,8 +270,8 @@ public class Game {
                 for (Green g : greens) {
                     influence_green(p.uncertainty, true, g);
                 }
-                Double cost = (1.0 - p.uncertainty) / 2 * blue.energy_cost * 5;
-                blue.LoseEnergy(cost);
+                Double cost = (1.0 - p.uncertainty) * 5 / 2;
+                blue_energy -= cost;
                 break;
             case 2:
                 break;
@@ -387,8 +337,7 @@ public class Game {
             case "red":
                 return new int[] { 1, 2, 3, 4, 5 };
             case "blue":
-                double remaining_energy = blue.getEnergy();
-                int max_level = (int) Math.floor(remaining_energy);
+                int max_level = (int) Math.floor(blue_energy / 5);
                 int[] valid_moves = new int[max_level + 1];
                 for (int i = 0; i < max_level + 1; i++) {
                     valid_moves[i] = i;

@@ -4,6 +4,9 @@ bin/*
 out/
 
 gs-ui-javafx-2.0/
+gs-algo-2.0/*
+gs-core-2.0/*
+
 .idea/
 
 templates/

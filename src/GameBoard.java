@@ -37,7 +37,7 @@ public class GameBoard {
     }
 
     private Vector<Grey> init_greys(int n_grey, int n_spies) {
-        // create n_grey greys with parameters
+        // create n_grey greys with parameters and n_spies spies
         Vector<Grey> greys = new Vector<Grey>();
         for (int i = 0; i < n_grey - n_spies; i++) {
             greys.add(new Grey(false));
@@ -133,50 +133,5 @@ public class GameBoard {
             }
         }
         return voters - non_voters;
-    }
-
-    public void blue_turn(int action) {
-        if (action == 0) {
-            // do nothing
-        } else if (action < Config.MAX_MESSAGE_LEVEL + 1) {
-            // check if blue has enough energy
-            if (get_blue_options()[action]) {
-                // send message
-                blue_energy -= action;
-                // set blue uncertainty
-                blue_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
-                // update greens
-                for (Green g : greens) {
-                    g.influence(blue_uncertainty, true);
-                }
-            }
-
-        } else if (action == Config.MAX_MESSAGE_LEVEL + 1) {
-            // release grey
-            release_grey();
-        } else {
-            System.out.println("Invalid action");
-            System.exit(1);
-        }
-    }
-
-    public void red_turn(int action) {
-        if (action == 0) {
-            // do nothing
-        } else if (action < Config.MAX_MESSAGE_LEVEL + 1) {
-            // check if red has enough energy
-            if (get_red_options()[action]) {
-                // send message
-                red_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
-                // update greens
-                for (Green g : greens) {
-                    g.unfollow(red_uncertainty);
-                    g.influence(red_uncertainty, false);
-                }
-            }
-        } else {
-            System.out.println("Invalid action");
-            System.exit(1);
-        }
     }
 }

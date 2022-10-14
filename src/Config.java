@@ -2,7 +2,7 @@
 public class Config {
 
     // Game parameters
-    public static final int N_GREENS = 10;
+    public static final int N_GREENS = 100;
     public static final double PROB_EDGE = 0.5;
     public static final int N_GREY = 3;
     public static final int N_SPIES = 1;

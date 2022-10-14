@@ -46,7 +46,7 @@ public class Green extends GameObject {
      * 
      * @param uncertainty
      */
-    public void unfollow(double u) {
+    public int unfollow(double u) {
         if (willVote) {
             double u_0_1 = (u + 1) / 2;
             double gu_0_1 = (uncertainty + 1) / 2;
@@ -56,8 +56,10 @@ public class Green extends GameObject {
 
             if (Math.random() < Math.pow(p, 2)) {
                 followsRed = false;
+                return 1;
             }
         }
+        return 0;
     }
 
     /*
@@ -65,7 +67,7 @@ public class Green extends GameObject {
      * also triggers the green to change their vote status if they are uncertain
      * enough
      */
-    public void update() {
+    public int update() {
         uncertainty += du;
         du = 0;
         uncertainty = Math.min(uncertainty, 0.999999);
@@ -74,6 +76,8 @@ public class Green extends GameObject {
         if (Math.random() < uncertainty) {
             willVote = !willVote;
             uncertainty = 0;
+            return 1;
         }
+        return 0;
     }
 }

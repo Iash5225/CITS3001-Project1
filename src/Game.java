@@ -9,6 +9,8 @@ public class Game {
     public Player red_player;
     public Player blue_player;
 
+    public boolean is_human;
+
     /**
      * Creates a new game with the given parameters.
      * 
@@ -25,6 +27,8 @@ public class Game {
         this.blue_starts = blue_starts;
         this.red_player = red_player;
         this.blue_player = blue_player;
+        this.is_human = !red_player.is_agent || !blue_player.is_agent;
+
         this.cli = new CLI();
         if (Config.VISUALISE) {
             this.visualiser = new Visualiser();
@@ -46,12 +50,12 @@ public class Game {
         for (int i = 0; i < n_rounds; i++) {
 
             if (blue_starts) {
-                board.blue_turn(get_blue_action());
-                board.red_turn(get_red_action());
+                blue_turn(get_blue_action());
+                red_turn(get_red_action());
                 green_turn();
             } else {
-                board.red_turn(get_red_action());
-                board.blue_turn(get_blue_action());
+                red_turn(get_red_action());
+                blue_turn(get_blue_action());
                 green_turn();
             }
             if (Config.VISUALISE) {
@@ -59,7 +63,7 @@ public class Game {
             }
             current_round++;
         }
-        if (!red_player.is_agent || !blue_player.is_agent) {
+        if (is_human) {
             cli.print_game_result(board);
         }
         return board.get_score();
@@ -69,14 +73,14 @@ public class Game {
      * Red's turn.
      */
     public int get_red_action() {
-        if (!red_player.is_agent || !blue_player.is_agent) {
+        if (is_human) {
             cli.print_info("Red's turn", "red");
             cli.print_game_info_for_players(board);
         }
         Boolean[] options = board.get_red_options();
         int action = -1;
 
-        while (action < 0 || action >= options.length) {
+        while (action < 0 || action >= options.length || !options[action]) {
             if (blue_player.is_agent) {
                 action = blue_player.get_next_move(options);
             } else {
@@ -105,6 +109,52 @@ public class Game {
             }
         }
         return action;
+    }
+
+    public void blue_turn(int action) {
+        if (action == 0) {
+            // do nothing
+        } else if (action < Config.MAX_MESSAGE_LEVEL + 1) {
+            // check if blue has enough energy
+            if (board.get_blue_options()[action]) {
+                // send message
+                board.blue_energy -= action;
+                // set blue uncertainty
+                board.blue_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
+
+                // update greens
+                for (Green g : board.greens) {
+                    g.influence(board.blue_uncertainty, true);
+                }
+            }
+
+        } else if (action == Config.MAX_MESSAGE_LEVEL + 1) {
+            // release grey
+            board.release_grey();
+        } else {
+            System.out.println("Invalid action");
+            System.exit(1);
+        }
+    }
+
+    public void red_turn(int action) {
+        if (action == 0) {
+            // do nothing
+        } else if (action < Config.MAX_MESSAGE_LEVEL + 1) {
+            // check if red has enough energy
+            if (board.get_red_options()[action]) {
+                // send message
+                board.red_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
+                // update greens
+                for (Green g : board.greens) {
+                    g.unfollow(board.red_uncertainty);
+                    g.influence(board.red_uncertainty, false);
+                }
+            }
+        } else {
+            System.out.println("Invalid action");
+            System.exit(1);
+        }
     }
 
     public void green_turn() {

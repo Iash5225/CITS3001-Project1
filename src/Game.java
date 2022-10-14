@@ -6,8 +6,10 @@ public class Game {
     public Vector<Grey> greys;
     public Blue blue;
     public Scanner sc;
+    public int[] blue_turns;
+    public int[] red_turns;
 
-    public int n_rounds = 50;
+    public int n_rounds = 5;
     public double Min_Uncertainty = 0.75;
     public int current_round;
     public boolean is_blues_turn;
@@ -262,6 +264,7 @@ public class Game {
 
         // get red's action
         int action = p.get_next_move(this);
+        red_turns[current_round] = action;
         switch (action) {
             case 1:
                 for (Green g : greens) {
@@ -315,6 +318,7 @@ public class Game {
 
         // get blue's action
         int action = p.get_next_move(this);
+        blue_turns[current_round] = action;
         switch (action) {
             case 1:
                 for (Green g : greens) {

@@ -3,20 +3,19 @@ import org.graphstream.graph.implementations.*;
 import java.util.*;
 
 public class Visualiser {
-    public static int Initial_Node_Capacity = 10;
-    public static int Initial_Edge_Capacity = 100;
+    public static int initial_node_capacity = 10;
+    public static int initial_edge_capacity = 100;
     public Graph graph;
     public Game game;
 
     public void main(String args[]) {
-        // Game game = new Game(Initial_Node_Capacity, 0.3, 3, 0.33, 0, 0.5, 0.5);
         setup();
     }
 
     public void setup() {
         // Visualising intial set up
         System.setProperty("org.graphstream.ui", "swing");
-        graph = new MultiGraph("Game", false, true, game.board.greens.size(), Initial_Edge_Capacity);
+        graph = new MultiGraph("Game", false, true, game.board.greens.size(), initial_edge_capacity);
         graph.setAttribute("ui.quality");
         graph.setAttribute("ui.antialias");
         graph.setAttribute("ui.stylesheet", styleSheet);

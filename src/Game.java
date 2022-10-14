@@ -11,6 +11,9 @@ public class Game {
 
     public boolean is_human;
 
+    // statistics
+    public int n_unfollows = 0;
+
     /**
      * Creates a new game with the given parameters.
      * 
@@ -147,7 +150,7 @@ public class Game {
                 board.red_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
                 // update greens
                 for (Green g : board.greens) {
-                    g.unfollow(board.red_uncertainty);
+                    n_unfollows += g.unfollow(board.red_uncertainty);
                     g.influence(board.red_uncertainty, false);
                 }
             }

@@ -32,6 +32,8 @@ public class App {
             } else {
                 draws++;
             }
+
+            n_unfollows += game.n_unfollows;
         }
 
         System.out.println("Red wins: " + red_wins);

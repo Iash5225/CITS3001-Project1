@@ -110,7 +110,7 @@ public class Bayesian extends GameObject {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        Bayesian bayesian = new Bayesian();
+        //Bayesian bayesian = new Bayesian();
         HashMap<String, String> Red_Turns_List = new HashMap<String, String>();
         // bayesian.generate_red_turns();
         // bayesian.update_hashtable(Red_Turns_List);
@@ -130,7 +130,7 @@ public class Bayesian extends GameObject {
         int blue_wins = 0;
         int draws = 0;
 
-        int n_unfollows = 0;
+       // int n_unfollows = 0;
         for (int i = 0; i < (visual ? 1 : 1000); i++) {
             // create a new game
             Game game = new Game(100, 0.6, 3, 1, -1, 1, 0.5);
@@ -195,7 +195,7 @@ public class Bayesian extends GameObject {
                             n_followers_b++;
                         }
                     }
-                    n_unfollows += n_followers_a - n_followers_b;
+                  //  n_unfollows += n_followers_a - n_followers_b;
                     // game.green_turn();
                     game.blue_turn(blue);
                     game.green_turn();

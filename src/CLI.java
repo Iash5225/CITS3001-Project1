@@ -7,7 +7,7 @@ public class CLI {
     // constructor
     public CLI() {
         // clear the screen
-        System.out.print("\033[H\033[2J");
+        // System.out.print("\033[H\033[2J");
         scanner = new Scanner(System.in);
 
     }

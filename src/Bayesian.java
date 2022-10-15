@@ -5,31 +5,12 @@ public class Bayesian extends GameObject {
 
     public Game game;
     public double chance_of_winning;
-    double[][] state_matrix;
     static int number_of_levels = 6;
     static int number_of_rounds = 4;
     double total_number_of_combinations = Math.pow(6.0, (double) number_of_rounds);
 
     public Bayesian() {
         super();
-    }
-
-    public void initialise() {
-        state_matrix = new double[number_of_levels][number_of_rounds];
-        for (int i = 0; i < number_of_levels; i++) {
-            for (int j = 0; j < number_of_rounds; j++) {
-                state_matrix[i][j] = 0.5;
-            }
-        }
-    }
-
-    public void print() {
-        for (int i = 0; i < number_of_levels; i++) {
-            for (int j = 0; j < number_of_rounds; j++) {
-                System.out.print(state_matrix[i][j] + " ");
-            }
-            System.out.println();
-        }
     }
 
     /**
@@ -46,19 +27,7 @@ public class Bayesian extends GameObject {
         return red_turns;
     }
 
-    public void update_hashtable(HashMap<String, String> ht) {
-        for (int i = 0; i < total_number_of_combinations; i++) {
-            ht.put(String.valueOf(i), "0");
-        }
-    }
 
-    public void generate_string(HashMap<String, String> ht, String buffer, int hastable_index) {
-        for (int i = 0; i < 6; i++) {
-            String index = String.valueOf(i);
-            ht.put(index, "0");
-        }
-        hastable_index++;
-    }
 
     /**
      * Evaluate the blue turns score for the game
@@ -67,7 +36,7 @@ public class Bayesian extends GameObject {
      * @param blue_turns
      * @return
      */
-    public static double score(int[] blue_turns) {
+    public static double score(int[] blue_turns,int number_of_red_will_votes) {
         double score = 0;
         for (int i = 0; i < blue_turns.length; i++) {
             int turn = blue_turns[i];
@@ -88,7 +57,7 @@ public class Bayesian extends GameObject {
         return score;
     }
 
-    public static int blue_move_agent(double score, int n_rounds) {
+    public static int blue_move_agent(double score, int n_rounds, int n_of_grey_agents) {
         if (score <= 0.0625) {
             return 5;
         }
@@ -207,13 +176,13 @@ public class Bayesian extends GameObject {
             int score = game.who_won();
             String red_moves_after_game = Arrays.toString(game.red_turns).replaceAll("\\[|\\]|,|\\s", "");
             // String blue_moves_after_game = Arrays.toString(game.blue_turns);
-            String blue_moves_after_game = blue_move_agent(score(game.blue_turns), game.n_rounds) + "";
-            System.out.println(blue_moves_after_game);
+            //String blue_moves_after_game = blue_move_agent(score(game.blue_turns), game.n_rounds) + "";
+            //System.out.println(blue_moves_after_game);
             //Syst(blue_moves_after_game);
             if (score < 0) {
                 red_wins++;
                 //Red_Turns_List.put(red_moves_after_game, String.valueOf(red_wins));
-                Red_Turns_List.put(red_moves_after_game, blue_moves_after_game);
+                //Red_Turns_List.put(red_moves_after_game, blue_moves_after_game);
             } else if (score > 0) {
                 blue_wins++;
             } else {

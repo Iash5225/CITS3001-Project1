@@ -1,33 +1,12 @@
 import java.util.*;
 
-public class Bayesian extends GameObject {
+public class Bayesian {
+    public GameBoard board;
+    public CLI cli;
     // TODO Auto-generated constructor stub
 
-    public Game game;
     public double chance_of_winning;
     static int number_of_levels = 6;
-    static int number_of_rounds = 4;
-    double total_number_of_combinations = Math.pow(6.0, (double) number_of_rounds);
-
-    public Bayesian() {
-        super();
-    }
-
-    /**
-     * 
-     */
-    public String generate_red_turns(HashMap<String, String> ht) {
-        String red_turns = "";
-        for (int i = 0; i < number_of_rounds; i++) {
-            ht.put(String.valueOf(i), "0");
-            for (int j = 0; j < number_of_levels; j++) {
-                red_turns = red_turns + String.valueOf(i);
-            }
-        }
-        return red_turns;
-    }
-
-
 
     /**
      * Evaluate the blue turns score for the game
@@ -36,42 +15,82 @@ public class Bayesian extends GameObject {
      * @param blue_turns
      * @return
      */
-    public static double score(int[] blue_turns,int number_of_red_will_votes) {
+    public static double Red_score(int[] red_turns) {
         double score = 0;
-        for (int i = 0; i < blue_turns.length; i++) {
-            int turn = blue_turns[i];
+        for (int i = 0; i < red_turns.length; i++) {
+            int turn = red_turns[i];
             if (turn == 5) {
-                score = score + 1;
+                score = score + 6;
             } else if (turn == 4) {
-                score = score + 0.75;
+                score = score + 5;
             } else if (turn == 3) {
-                score = score + 0.5;
+                score = score + 4;
             } else if (turn == 2) {
-                score = score + 0.25;
+                score = score + 3;
             } else if (turn == 1) {
-                score = score + 0.125;
+                score = score + 2;
             } else if (turn == 0) {
-                score = score + 0.0625;
+                score = score + 1;
             }
         }
         return score;
     }
 
-    public static int blue_move_agent(double score, int n_rounds, int n_of_grey_agents) {
-        if (score <= 0.0625) {
-            return 5;
+    /**
+     * 
+     * @param red_move_score
+     * @param n_rounds
+     * @param n_of_grey_agents
+     * @param number_of_will_votes
+     * @param total_number_of_greens
+     * @param blue_energy
+     * @return
+     */
+    public static int blue_move_agent(double red_move_score, int n_rounds, int n_of_grey_agents,
+            int number_of_will_votes,
+            int total_number_of_greens, double blue_energy) {
+        double score = 0;
+        score = red_move_score/n_rounds;
+        double proportion_of_voting_greens = (double) number_of_will_votes / (double) total_number_of_greens;
+
+        if (proportion_of_voting_greens < 20.0 && proportion_of_voting_greens > 0.0) {
+            score = score + 5;
+        } else if (proportion_of_voting_greens < 40.0 && proportion_of_voting_greens > 20.0) {
+            score = score + 4;
+        } else if (proportion_of_voting_greens < 60.0 && proportion_of_voting_greens > 40.0) {
+            score = score + 3;
+        } else if (proportion_of_voting_greens < 80.0 && proportion_of_voting_greens > 60.0) {
+            score = score + 2;
+        } else if (proportion_of_voting_greens < 100.0 && proportion_of_voting_greens > 80.0) {
+            score = score + 1;
         }
-        if (score <= 0.0625 + 1) {
-            return 4;
+
+        if (blue_energy < 20.0 && blue_energy > 0.0) {
+            score = score + 1;
+        } else if (blue_energy < 40.0 && blue_energy > 20.0) {
+            score = score + 2;
+        } else if (blue_energy < 60.0 && blue_energy > 40.0) {
+            score = score + 3;
+        } else if (blue_energy < 80.0 && blue_energy > 60.0) {
+            score = score + 4;
+        } else if (blue_energy < 100.0 && blue_energy > 80.0) {
+            score = score + 5;
         }
-        if (score <= 0.0625 + 2) {
-            return 3;
+
+        if (score <= 20) {
+            return 1;
         }
-        if (score <= 0.0625 + 3) {
+        if (score <= 40 && score > 20) {
             return 2;
         }
-        if (score <= 0.0625 + 4) {
-            return 1;
+        if (score <= 60 && score > 40) {
+            return 3;
+        }
+        if (score <= 80 && score > 60) {
+            return 4;
+        }
+        if (score <= 100 && score > 80) {
+            return 5;
         }
         return 0;
 
@@ -79,123 +98,21 @@ public class Bayesian extends GameObject {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        //Bayesian bayesian = new Bayesian();
-        HashMap<String, String> Red_Turns_List = new HashMap<String, String>();
-        // bayesian.generate_red_turns();
-        // bayesian.update_hashtable(Red_Turns_List);
 
-        Red_Turns_List.put("0", "0");
-        Red_Turns_List.put("1", "1");
-        Red_Turns_List.put("2", "2");
-        Red_Turns_List.put("3", "3");
-        Red_Turns_List.put("4", "4");
-        Red_Turns_List.put("5", "5");
+        int[] red_turns = new int[5];
+        red_turns[0] = 5;
+        red_turns[1] = 5;
+        red_turns[2] = 5;
+        red_turns[3] = 5;
+        red_turns[4] = 5;
 
-        int[] blue_moves = new int[5];
-        int[] red_moves = new int[5];
-        boolean visual = false;
+        double red_move_score = Red_score(red_turns);
+        
 
-        int red_wins = 0;
-        int blue_wins = 0;
-        int draws = 0;
+        int blue_move = blue_move_agent(red_move_score, 5, 5, 5, 5, 5);
+        System.out.println(blue_move);
 
-       // int n_unfollows = 0;
-        for (int i = 0; i < (visual ? 1 : 1000); i++) {
-            // create a new game
-            Game game = new Game(100, 0.6, 3, 1, -1, 1, 0.5);
-            game.blue_turns = blue_moves;
-            game.red_turns = red_moves;
-            if (visual) {
-                Visualiser visualiser = new Visualiser();
-                visualiser.game = game;
-                game.printGreens();
 
-                visualiser.setup();
-                visualiser.graph.display();
-
-                RedPlayer red = new RedPlayer(false);
-                BluePlayer blue = new BluePlayer(false);
-
-                while (game.current_round < game.n_rounds) {
-                    game.red_turn(red);
-                    game.green_turn();
-                    game.blue_turn(blue);
-                    game.green_turn();
-                    game.current_round++;
-                    if (visual) {
-                        visualiser.game = game;
-                        visualiser.update_visualiser();
-                    }
-                }
-
-                int score = game.who_won();
-                game.plot_green_uncertainty_distribution(10);
-                game.print_game_info_for_players();
-                System.out.print("\033[1;93m");
-                System.out.println("Game over");
-                System.out.print("\033[0m");
-                if (score < 0) {
-                    System.out.print("\033[0;31m"); // Red
-                    System.out.println("Red wins!");
-                    System.out.print("\033[0m"); // Reset
-                } else if (score > 0) {
-                    System.out.print("\033[0;34m"); // Blue
-                    System.out.println("Blue wins!");
-                    System.out.print("\033[0m"); // Reset
-                } else {
-                    System.out.println("Tie");
-                }
-            } else {
-
-                RedPlayer red = new RedPlayer(true);
-                BluePlayer blue = new BluePlayer(true);
-
-                while (game.current_round < game.n_rounds) {
-                    int n_followers_a = 0;
-                    int n_followers_b = 0;
-                    for (Green g : game.greens) {
-                        if (g.followsRed) {
-                            n_followers_a++;
-                        }
-                    }
-                    game.red_turn(red);
-                    for (Green g : game.greens) {
-                        if (g.followsRed) {
-                            n_followers_b++;
-                        }
-                    }
-                  //  n_unfollows += n_followers_a - n_followers_b;
-                    // game.green_turn();
-                    game.blue_turn(blue);
-                    game.green_turn();
-                    game.current_round++;
-
-                }
-            }
-
-            int score = game.who_won();
-            String red_moves_after_game = Arrays.toString(game.red_turns).replaceAll("\\[|\\]|,|\\s", "");
-            // String blue_moves_after_game = Arrays.toString(game.blue_turns);
-            //String blue_moves_after_game = blue_move_agent(score(game.blue_turns), game.n_rounds) + "";
-            //System.out.println(blue_moves_after_game);
-            //Syst(blue_moves_after_game);
-            if (score < 0) {
-                red_wins++;
-                //Red_Turns_List.put(red_moves_after_game, String.valueOf(red_wins));
-                //Red_Turns_List.put(red_moves_after_game, blue_moves_after_game);
-            } else if (score > 0) {
-                blue_wins++;
-            } else {
-                draws++;
-            }
-        }
-
-        System.out.println("Red wins: " + red_wins);
-        System.out.println("Blue wins: " + blue_wins);
-        System.out.println("Draws: " + draws);
-
-        // System.out.println("Average number of unfollows: " + (double) n_unfollows /
-        // 1000);
     }
 
 }

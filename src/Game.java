@@ -2,12 +2,14 @@ public class Game {
     public GameBoard board;
     public CLI cli;
     public Visualiser visualiser;
+    public Bayesian bayesian;
 
     public int n_rounds;
     public int current_round;
     public boolean blue_starts;
     public Player red_player;
     public Player blue_player;
+    public int[] red_moves_played;
 
     public boolean is_human;
 
@@ -40,6 +42,7 @@ public class Game {
             visualiser.graph.display();
         }
 
+        red_moves_played = new int[n_rounds];
         current_round = 0;
     }
 
@@ -54,7 +57,9 @@ public class Game {
 
             if (blue_starts) {
                 blue_turn(get_blue_action());
-                red_turn(get_red_action());
+                int red_MOVE = get_red_action();
+                red_turn(red_MOVE);
+                red_moves_played[i] = red_MOVE;
                 green_turn();
             } else {
                 red_turn(get_red_action());
@@ -96,91 +101,39 @@ public class Game {
     /**
      * Blue's turn.
      */
-    private void print_bar(String label, String color, int n) {
-        // bar unicode
-        // https://www.compart.com/en/unicode/block/U+2580
-        System.out.printf("%-20s:", label);
-        System.out.print(color);
-        for (int i = 0; i < n; i++) {
-            System.out.print("\u2584");
+    public int get_blue_action() {
+        if (!red_player.is_agent || !blue_player.is_agent) {
+            cli.print_info("Blue's Turn", "blue");
+            cli.print_game_info_for_players(board);
         }
         Boolean[] options = board.get_blue_options();
         int action = -1;
-    }
 
-    public void print_game_info_for_players() {
-        // print a bar chart of the number of greens that will vote
-        int n_voters = number_of_voting_greens();
-        int n_non_voters = greens.size() - n_voters;
-        System.out.println("=========================================");
-
-        print_bar("Voters", "\033[34m", n_voters);
-        print_bar("Non-voters", "\033[31m", n_non_voters);
-
-        System.out.println("=========================================");
-
-        int n_red_followers = 0;
-        int n_non_followers = 0;
-        for (Green green : greens) {
-            if (green.followsRed) {
-                n_red_followers++;
+        while (action < 0 || action >= options.length || !options[action]) {
+            if (blue_player.is_agent) {
+                action = blue_player.get_next_move(options);
+                double score = bayesian.Red_score(red_moves_played);
+                //System.out.println("Red's score is: " + score);
+                int move = bayesian.blue_move_agent(score,n_rounds,board.greys.size(),board.get_n_voters(),board.greens.size(),board.blue_energy);
+                System.out.println(move);
+                //action = move;
             } else {
                 action = cli.get_blue_move(options);
             }
         }
-        print_bar("Red followers", "\033[31m", n_red_followers);
-        print_bar("Non followers", "\033[34m", n_non_followers);
-
+        return action;
     }
 
-    public void print_debug_menu() {
-        System.out.println("=========================================");
-        System.out.println("Debug menu:");
-        System.out.println("1. Print green info");
-        System.out.println("2. Plot green uncertainty distribution");
-        System.out.println("=========================================");
-
-        while (true) {
-            System.out.print("Enter your choice: ");
-            int choice = sc.nextInt();
-            boolean valid_choice = true;
-            switch (choice) {
-                case 1:
-                    printGreens();
-                    break;
-                case 2:
-                    plot_green_uncertainty_distribution(10);
-                    break;
-                default:
-                    System.out.println("Invalid choice");
-                    valid_choice = false;
-                    break;
-            }
-            if (valid_choice) {
-                break;
-            }
-        }
-
-    }
-
-    /**
-     * Plots the green uncertainty distribution
-     * 
-     * @param n_intervals
-     */
-    public void plot_green_uncertainty_distribution(int n_intervals) {
-        System.out.println("Green uncertainty distribution:");
-        int[] bins = new int[n_intervals];
-        for (Green green : greens) {
-            int bin = (int) ((green.uncertainty + 1) * (double) n_intervals / 2);
-            bins[bin]++;
-        }
-        for (int i = 0; i < bins.length; i++) {
-            Double lb = -1.0 + i * 2.0 / (double) n_intervals;
-            String range = String.format("(%.1f)", lb) + " - "
-                    + String.format("(%.1f)", lb + 2.0 / (double) n_intervals);
-            print_bar(range, "\033[34m", bins[i]);
-        }
+    public void blue_turn(int action) {
+        if (action == 0) {
+            // do nothing
+        } else if (action < Config.MAX_MESSAGE_LEVEL + 1) {
+            // check if blue has enough energy
+            if (board.get_blue_options()[action]) {
+                // send message
+                board.blue_energy -= action;
+                // set blue uncertainty
+                board.blue_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
 
                 // update greens
                 for (Green g : board.greens) {
@@ -207,6 +160,8 @@ public class Game {
                 board.red_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
                 // update greens
                 for (Green g : board.greens) {
+                    if (!g.followsRed)
+                        continue;
                     n_unfollows += g.unfollow(board.red_uncertainty);
                     g.influence(board.red_uncertainty, false);
                 }
@@ -225,6 +180,9 @@ public class Game {
             for (Green g2 : g1.friends) {
                 g2.influence(g1.uncertainty, g1.willVote);
             }
+        }
+        for (Green g : board.greens) {
+            g.update();
         }
     }
 

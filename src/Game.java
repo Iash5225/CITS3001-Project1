@@ -150,6 +150,8 @@ public class Game {
                 board.red_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
                 // update greens
                 for (Green g : board.greens) {
+                    if (!g.followsRed)
+                        continue;
                     n_unfollows += g.unfollow(board.red_uncertainty);
                     g.influence(board.red_uncertainty, false);
                 }
@@ -168,6 +170,9 @@ public class Game {
             for (Green g2 : g1.friends) {
                 g2.influence(g1.uncertainty, g1.willVote);
             }
+        }
+        for (Green g : board.greens) {
+            g.update();
         }
     }
 

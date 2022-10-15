@@ -11,8 +11,7 @@ public class Game {
 
     public boolean is_human;
 
-    // statistics
-    public int n_unfollows = 0;
+    public boolean visualise;
 
     /**
      * Creates a new game with the given parameters.
@@ -24,16 +23,18 @@ public class Game {
      * @param blue          The blue player.
      *
      */
-    public Game(GameBoard board, int n_rounds, boolean blue_starts, Player red_player, Player blue_player) {
+    public Game(GameBoard board, int n_rounds, boolean blue_starts, Player red_player, Player blue_player,
+            boolean visualise) {
         this.board = board;
         this.n_rounds = n_rounds;
         this.blue_starts = blue_starts;
         this.red_player = red_player;
         this.blue_player = blue_player;
         this.is_human = !red_player.is_agent || !blue_player.is_agent;
+        this.visualise = visualise;
 
         this.cli = new CLI();
-        if (Config.VISUALISE) {
+        if (visualise) {
             this.visualiser = new Visualiser();
             this.visualiser.game = this;
             visualiser.setup();
@@ -53,21 +54,22 @@ public class Game {
         for (int i = 0; i < n_rounds; i++) {
 
             if (blue_starts) {
-                blue_turn(get_blue_action());
-                red_turn(get_red_action());
-                green_turn();
+                board.blue_turn(get_blue_action());
+                board.red_turn(get_red_action());
+                board.green_turn();
             } else {
-                red_turn(get_red_action());
-                blue_turn(get_blue_action());
-                green_turn();
+                board.red_turn(get_red_action());
+                board.blue_turn(get_blue_action());
+                board.green_turn();
             }
-            if (Config.VISUALISE) {
+            if (visualise) {
                 visualiser.update_visualiser();
             }
             current_round++;
         }
         if (is_human) {
             cli.print_game_result(board);
+            visualiser.exit();
         }
         return board.get_score();
     }
@@ -113,62 +115,4 @@ public class Game {
         }
         return action;
     }
-
-    public void blue_turn(int action) {
-        if (action == 0) {
-            // do nothing
-        } else if (action < Config.MAX_MESSAGE_LEVEL + 1) {
-            // check if blue has enough energy
-            if (board.get_blue_options()[action]) {
-                // send message
-                board.blue_energy -= action;
-                // set blue uncertainty
-                board.blue_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
-
-                // update greens
-                for (Green g : board.greens) {
-                    g.influence(board.blue_uncertainty, true);
-                }
-            }
-
-        } else if (action == Config.MAX_MESSAGE_LEVEL + 1) {
-            // release grey
-            board.release_grey();
-        } else {
-            System.out.println("Invalid action");
-            System.exit(1);
-        }
-    }
-
-    public void red_turn(int action) {
-        if (action == 0) {
-            // do nothing
-        } else if (action < Config.MAX_MESSAGE_LEVEL + 1) {
-            // check if red has enough energy
-            if (board.get_red_options()[action]) {
-                // send message
-                board.red_uncertainty = 1.0 - (double) action * 2 / Config.MAX_MESSAGE_LEVEL;
-                // update greens
-                for (Green g : board.greens) {
-                    n_unfollows += g.unfollow(board.red_uncertainty);
-                    g.influence(board.red_uncertainty, false);
-                }
-            }
-        } else {
-            System.out.println("Invalid action");
-            System.exit(1);
-        }
-    }
-
-    public void green_turn() {
-        for (Green g : board.greens) {
-            g.update();
-        }
-        for (Green g1 : board.greens) {
-            for (Green g2 : g1.friends) {
-                g2.influence(g1.uncertainty, g1.willVote);
-            }
-        }
-    }
-
 }

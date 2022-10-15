@@ -86,6 +86,52 @@ public class CLI {
         }
     }
 
+    public int get_int_from_user(String prompt, int min, int max) {
+        while (true) {
+            System.out.print(prompt + " (" + min + "-" + max + "): ");
+            try {
+                int choice = Integer.parseInt(scanner.nextLine());
+                if (choice >= min && choice <= max) {
+                    return choice;
+                } else {
+                    System.out.println("The number must be between " + min + " and " + max);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("That's not a number. Try again.");
+            }
+        }
+    }
+
+    public double get_double_from_user(String prompt, double min, double max) {
+        while (true) {
+            System.out.print(prompt + " (" + min + "-" + max + "): ");
+            try {
+                double choice = Double.parseDouble(scanner.nextLine());
+                if (choice >= min && choice <= max) {
+                    return choice;
+                } else {
+                    System.out.println("The number must be between " + min + " and " + max);
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("That's not a number. Try again.");
+            }
+        }
+    }
+
+    public boolean get_boolean_from_user(String prompt) {
+        while (true) {
+            System.out.print(prompt + " (y/n): ");
+            String choice = scanner.nextLine();
+            if (choice.equals("y")) {
+                return true;
+            } else if (choice.equals("n")) {
+                return false;
+            } else {
+                System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
     /**
      * Prints the greens in the game.
      * for debugging purposes
@@ -214,7 +260,7 @@ public class CLI {
         }
         String[] option_strings = new String[valid_options.size()];
         option_strings[0] = "Do nothing";
-        for (int i = 1; i < Config.MAX_MESSAGE_LEVEL + 1; i++) {
+        for (int i = 1; i <= options.length; i++) {
             option_strings[i] = "Send message " + i;
         }
         int choice = menu("Red's move:", option_strings, "Enter your choice: ");
@@ -231,7 +277,7 @@ public class CLI {
         String[] option_strings = new String[valid_options.size()];
         option_strings[0] = "Do nothing";
         for (int i = 1; i < valid_options.size(); i++) {
-            if (valid_options.get(i) <= Config.MAX_MESSAGE_LEVEL) {
+            if (valid_options.get(i) < options.length - 1) {
                 option_strings[i] = "Send message " + valid_options.get(i);
             } else {
                 option_strings[i] = "Release Grey";
@@ -240,5 +286,22 @@ public class CLI {
 
         int choice = menu("Blue's move:", option_strings, "Enter your choice: ");
         return valid_options.get(choice);
+    }
+
+    public void print_statistics(int red_wins, int blue_wins, int draws, double avg_unfollows) {
+        System.out.println("=========================================");
+        print_info("Statistics", "green");
+        print_info("Red wins: " + red_wins, "red");
+        print_info("Blue wins: " + blue_wins, "blue");
+        print_info("Draws: " + draws, "white");
+        print_info("Average number of unfollows: " + avg_unfollows, "white");
+        System.out.println("=========================================");
+    }
+
+    public void print_welcome() {
+        System.out.println("=========================================");
+        System.out.println("Welcome to the Disinformation Game");
+        System.out.println("By: Jean-Pierre le Breton & Iash Bashir");
+        System.out.println("=========================================");
     }
 }

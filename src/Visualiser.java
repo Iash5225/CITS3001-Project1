@@ -114,4 +114,9 @@ public class Visualiser {
             "node.redwillNOTVote {fill-color: rgb(255,105,97);fill-mode:plain;}" +
             "node.grey {fill-color: grey;}" +
             "node.marked {fill-color: purple;arrow-size: 3px, 2px;}";
+
+    public void exit() {
+        graph.clear();
+        graph.display(false);
+    }
 }

@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.*;
 
 public class CLI {
     Scanner scanner;
@@ -225,7 +226,29 @@ public class CLI {
         }
     }
 
-    public void print_move_distribution()
+    /**
+     * Prints a bar chart of the frequency of moves made by the agent
+     * @param game
+     */
+    public void print_move_distribution(Game game){
+        System.out.println("Move distribution:");
+
+        int[] red_moves = game.red_moves_played;
+        int[] bins = new int[7];
+
+        List asList = Arrays.asList(red_moves);
+        //Set<Integer> mySet = new HashSet<Integer>(asList);
+
+        for (int i = 0; i < 7; i++) {
+            int bin = Collections.frequency(asList, i);
+            bins[i]=bin;
+        }
+        for (int i = 0; i < bins.length; i++) {
+            String range = String.format("%d", i);
+            print_bar(range, "\033[34m", bins[i]);
+        }
+
+    }
 
     /**
      *   Print round info

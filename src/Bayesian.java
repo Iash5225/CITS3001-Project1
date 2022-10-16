@@ -50,7 +50,7 @@ public class Bayesian {
             int number_of_will_votes,
             int total_number_of_greens, double blue_energy) {
         double score = 0;
-        score = red_move_score/n_rounds;
+        score = red_move_score / n_rounds;
         double proportion_of_voting_greens = (double) number_of_will_votes / (double) total_number_of_greens;
 
         if (proportion_of_voting_greens < 20.0 && proportion_of_voting_greens > 0.0) {
@@ -107,11 +107,9 @@ public class Bayesian {
         red_turns[4] = 5;
 
         double red_move_score = Red_score(red_turns);
-        
 
         int blue_move = blue_move_agent(red_move_score, 5, 5, 5, 5, 5);
-        System.out.println(blue_move);
-
+        // System.out.println(blue_move);
 
     }
 

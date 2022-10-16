@@ -118,7 +118,7 @@ public class Game {
                 // System.out.println("Red's score is: " + score);
                 int move = bayesian.blue_move_agent(score, n_rounds, board.greys.size(), board.get_n_voters(),
                         board.greens.size(), board.blue_energy);
-                System.out.println(move);
+                // System.out.println(move);
                 // action = move;
             } else {
                 action = cli.get_blue_move(options);

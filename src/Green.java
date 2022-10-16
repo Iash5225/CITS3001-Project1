@@ -56,7 +56,7 @@ public class Green extends GameObject {
 
             // the lower the uncertainty, the more likely the green will unfollow
             // the lower the green's uncertainty, the more likely the green will unfollow
-            double p = u_0_1 + gu_0_1;
+            double p = u_0_1 + gu_0_1 + 0.5;
 
             if (Math.random() > Math.pow(p, 1)) {
                 followsRed = false;

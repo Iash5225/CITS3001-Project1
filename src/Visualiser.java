@@ -21,19 +21,20 @@ public class Visualiser {
         graph.setAttribute("ui.stylesheet", styleSheet);
         game.board.greens.forEach((green) -> {
             Node node = graph.addNode(String.valueOf(green.id));
-            node.setAttribute("ui.label", String.valueOf(green.id) + ":" + String.format("%.2f", green.uncertainty));
+            // node.setAttribute("ui.label", String.valueOf(green.id) + ":" +
+            // String.format("%.2f", green.uncertainty));
 
             if (green.followsRed) {
                 if (green.willVote) {
-                    node.setAttribute("ui.class", "redwillVote");
+                    node.setAttribute("ui.class", "followsredwillvote");
                 } else {
-                    node.setAttribute("ui.class", "redwillNOTVote");
+                    node.setAttribute("ui.class", "followsredwillnotvote");
                 }
             } else {
                 if (green.willVote) {
-                    node.setAttribute("ui.class", "greenwillVote");
+                    node.setAttribute("ui.class", "followsbluewillvote");
                 } else {
-                    node.setAttribute("ui.class", "greenwillNOTVote");
+                    node.setAttribute("ui.class", "followsbluewillnotvote");
                 }
             }
         });
@@ -60,18 +61,18 @@ public class Visualiser {
             Node node = graph.getNode(String.valueOf(green.id));
             // node.setAttribute("ui.label", String.valueOf(green.id) + ":" +
             // String.format("%.2f", green.uncertainty));
-            node.setAttribute("ui.label", String.valueOf(green.id));
+            // node.setAttribute("ui.label", String.valueOf(green.id));
             if (green.followsRed) {
                 if (green.willVote) {
-                    node.setAttribute("ui.class", "redwillVote");
+                    node.setAttribute("ui.class", "followsredwillvote");
                 } else {
-                    node.setAttribute("ui.class", "redwillNOTVote");
+                    node.setAttribute("ui.class", "followsredwillnotvote");
                 }
             } else {
                 if (green.willVote) {
-                    node.setAttribute("ui.class", "greenwillVote");
+                    node.setAttribute("ui.class", "followsbluewillvote");
                 } else {
-                    node.setAttribute("ui.class", "greenwillNOTVote");
+                    node.setAttribute("ui.class", "followsbluewillnotvote");
                 }
             }
 
@@ -106,12 +107,12 @@ public class Visualiser {
     }
 
     protected String styleSheet = "node {fill-color: green;text-size: 20;text-alignment: center;z-index:2;size:20px;}" +
-            "node.greenwillVote {fill-color: rgb(186,255,201);fill-mode:plain;shadow-color:rgb(61,66,107);shadow-width:5px;shadow-offset:0;shadow-mode:plain;}"
+            "node.followsbluewillvote {fill-color: rgb(96,190,230);fill-mode:plain;shadow-color:rgb(61,66,107);shadow-width:5px;shadow-offset:0;shadow-mode:plain;}"
             +
-            "node.greenwillNOTVote {fill-color: rgb(186,255,201);fill-mode:plain;}" +
-            "node.redwillVote {fill-color: rgb(255,105,97);fill-mode:plain;shadow-color:rgb(61,66,107);shadow-width:5px;shadow-offset:0;shadow-mode:plain;}"
+            "node.followsredwillvote {fill-color: rgb(96,190,230);fill-mode:plain;}" +
+            "node.followsbluewillnotvote {fill-color: rgb(255,105,97);fill-mode:plain;shadow-color:rgb(61,66,107);shadow-width:5px;shadow-offset:0;shadow-mode:plain;}"
             +
-            "node.redwillNOTVote {fill-color: rgb(255,105,97);fill-mode:plain;}" +
+            "node.followsredwillnotvote {fill-color: rgb(255,105,97);fill-mode:plain;}" +
             "node.grey {fill-color: grey;}" +
             "node.marked {fill-color: purple;arrow-size: 3px, 2px;}";
 

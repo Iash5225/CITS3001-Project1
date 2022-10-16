@@ -50,8 +50,10 @@ public class Green extends GameObject {
         if (!followsRed)
             return 0;
         if (willVote) {
+            // remap u to [0, 1]
             double u_0_1 = (u + 1) / 2;
             double gu_0_1 = (uncertainty + 1) / 2;
+
             // the lower the uncertainty, the more likely the green will unfollow
             // the lower the green's uncertainty, the more likely the green will unfollow
             double p = u_0_1 + gu_0_1;

@@ -2,12 +2,14 @@ public class Game {
     public GameBoard board;
     public CLI cli;
     public Visualiser visualiser;
+    public Bayesian bayesian;
 
     public int n_rounds;
     public int current_round;
     public boolean blue_starts;
     public Player red_player;
     public Player blue_player;
+    public int[] red_moves_played;
 
     public boolean is_human;
 
@@ -41,6 +43,7 @@ public class Game {
             visualiser.graph.display();
         }
 
+        red_moves_played = new int[n_rounds];
         current_round = 0;
     }
 
@@ -111,6 +114,12 @@ public class Game {
         while (action < 0 || action >= options.length || !options[action]) {
             if (blue_player.is_agent) {
                 action = blue_player.get_next_move(options);
+                double score = bayesian.Red_score(red_moves_played);
+                // System.out.println("Red's score is: " + score);
+                int move = bayesian.blue_move_agent(score, n_rounds, board.greys.size(), board.get_n_voters(),
+                        board.greens.size(), board.blue_energy);
+                System.out.println(move);
+                // action = move;
             } else {
                 action = cli.get_blue_move(options);
             }

@@ -126,7 +126,7 @@ public class Game {
                 double score = Bayesian.Red_score(red_moves_played);
                 // System.out.println("Red's score is: " + score);
                 int move = Bayesian.blue_move_agent(score, n_rounds, board.greys.size(), board.get_n_voters(),
-                        board.greens.size(), board.blue_energy);
+                        board.greens.size(), board.blue_energy, board.blue_starting_energy);
                 // System.out.println("-----------------------");
                 System.out.println("Blue Agent played:" + move);
                 cli.print_game_info_for_players(board);

@@ -11,7 +11,7 @@ public class GameController {
 
         boolean red_is_ai = cli.get_boolean_from_user("Would you like red to be an AI?");
         boolean blue_is_ai = cli.get_boolean_from_user("Would you like blue to be an AI?");
-        int starting_player = cli.menu("Who should start?", new String[] { "Red", "Blue" }, null);
+        int starting_player = cli.menu("Who should start?", new String[] { "Red", "Blue" }, "");
         boolean blue_starts = (starting_player == 1 ? true : false);
         int n_games = 1;
         boolean visualise = false;

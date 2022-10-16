@@ -5,7 +5,7 @@ public class Simulation {
     public static void main(String[] args) throws Exception {
         CLI cli = new CLI();
 
-        int n_games = 1000;
+        int n_games = 10;
         int n_rounds = 10;
         int n_greens = 25;
         double prob_edge = 0.2;
@@ -34,7 +34,7 @@ public class Simulation {
                     blue_starting_energy, max_message_level);
 
             Player red = new Player(red_is_ai);
-            Player blue = new Player(red_is_ai);
+            Player blue = new Player(blue_is_ai);
 
             Game game = new Game(gb, n_rounds, blue_starts, red, blue, visualise, cli);
 

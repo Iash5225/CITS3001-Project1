@@ -8,6 +8,7 @@ public class GameBoard {
     double red_uncertainty;
 
     int max_message_level;
+    double blue_starting_energy;
 
     int n_unfollows;
 
@@ -17,6 +18,7 @@ public class GameBoard {
         greens = init_greens(n_green, prob_edge, uncertainty_lb, uncertainty_ub, percentage_vote);
         greys = init_greys(n_grey, n_spies);
         // set blue energy
+        this.blue_starting_energy = blue_starting_energy;
         this.blue_energy = blue_starting_energy;
         this.blue_uncertainty = 0;
         this.red_uncertainty = 0;

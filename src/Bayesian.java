@@ -45,9 +45,11 @@ public class Bayesian {
      */
     public static int blue_move_agent(double red_move_score, int n_rounds, int n_of_grey_agents,
             int number_of_will_votes,
-            int total_number_of_greens, double blue_energy) {
+            int total_number_of_greens, double blue_energy, double blue_starting_energy) {
+
+        final double max_score = 6 * n_rounds + 15;
         double score = 0;
-        //score = red_move_score;
+        // score = red_move_score;
         double proportion_of_voting_greens = (double) number_of_will_votes / (double) total_number_of_greens;
 
         // assess the proportion of voting greens
@@ -65,7 +67,7 @@ public class Bayesian {
             score = score + 1;
         }
 
-        double energy_increment = Config.BLUE_STARTING_ENERGY / 5;
+        double energy_increment = blue_starting_energy / 5;
 
         // assess the energy of the blue agent
         // if low, then the blue agent should be more passive
@@ -78,48 +80,49 @@ public class Bayesian {
             score = score + 3;
         } else if (blue_energy <= energy_increment * 4 && blue_energy > energy_increment * 3) {
             score = score + 4;
-        } else if (blue_energy <= Config.BLUE_STARTING_ENERGY && blue_energy > energy_increment * 4) {
+        } else if (blue_energy <= blue_starting_energy && blue_energy > energy_increment * 4) {
             score = score + 5;
         }
 
-        if (score <= Config.max_score * 0.2) {
+        if (score <= max_score * 0.2) {
             if (n_of_grey_agents > 0) {
                 return 6;
             } else {
                 return 5;
             }
         }
-        if (score <= Config.max_score * 0.4 && score > Config.max_score * 0.2) {
+        if (score <= max_score * 0.4 && score > max_score * 0.2) {
             return 4;
         }
-        if (score <= Config.max_score * 0.6 && score > Config.max_score * 0.4) {
+        if (score <= max_score * 0.6 && score > max_score * 0.4) {
             return 3;
         }
-        if (score <= Config.max_score * 0.8 && score > Config.max_score * 0.6) {
+        if (score <= max_score * 0.8 && score > max_score * 0.6) {
             return 2;
         }
-        if (score <= Config.max_score && score > Config.max_score * 0.8) {
+        if (score <= max_score && score > max_score * 0.8) {
             return 1;
         }
         return 0;
     }
 
-    public static void main(String[] args) {
-        // TODO Auto-generated method stub
+    // public static void main(String[] args) {
+    // // TODO Auto-generated method stub
 
-        int[] red_turns = new int[5];
-        red_turns[0] = 1;
-        red_turns[1] = 1;
-        red_turns[2] = 1;
-        red_turns[3] = 1;
-        red_turns[4] = 1;
+    // int[] red_turns = new int[5];
+    // red_turns[0] = 1;
+    // red_turns[1] = 1;
+    // red_turns[2] = 1;
+    // red_turns[3] = 1;
+    // red_turns[4] = 1;
 
-        double red_move_score = Red_score(red_turns);
+    // double red_move_score = Red_score(red_turns);
 
-        int blue_move = blue_move_agent(red_move_score, Config.N_ROUNDS, Config.N_GREY,
-                Config.N_GREENS / 2, Config.N_GREENS, 25.0);
-        System.out.println(blue_move);
+    // int blue_move = blue_move_agent(red_move_score, Config.N_ROUNDS,
+    // Config.N_GREY,
+    // Config.N_GREENS / 2, Config.N_GREENS, 25.0);
+    // System.out.println(blue_move);
 
-    }
+    // }
 
 }

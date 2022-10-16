@@ -162,6 +162,8 @@ public class GameBoard {
                 red_uncertainty = 1.0 - (double) action * 2 / max_message_level;
                 // update greens
                 for (Green g : greens) {
+                    if (!g.followsRed)
+                        continue;
                     n_unfollows += g.unfollow(red_uncertainty);
                     g.influence(red_uncertainty, false);
                 }

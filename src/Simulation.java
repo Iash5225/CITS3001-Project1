@@ -6,14 +6,14 @@ public class Simulation {
         CLI cli = new CLI();
 
         int n_games = 1000;
-        int n_rounds = 100;
-        int n_greens = 10;
+        int n_rounds = 10;
+        int n_greens = 25;
+        double prob_edge = 0.2;
         int n_greys = 3;
         int n_spies = 1;
         int u_lb = -1;
         int u_ub = 1;
         double prob_vote = 0.5;
-        double prob_edge = 0.5;
         int blue_starting_energy = 25;
         int max_message_level = 5;
 

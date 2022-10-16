@@ -2,7 +2,6 @@ import java.util.*;
 
 public class Bayesian {
     public GameBoard board;
-    public CLI cli;
     // TODO Auto-generated constructor stub
 
     public double chance_of_winning;
@@ -50,7 +49,7 @@ public class Bayesian {
             int number_of_will_votes,
             int total_number_of_greens, double blue_energy) {
         double score = 0;
-        score = red_move_score/n_rounds;
+        score = red_move_score / n_rounds;
         double proportion_of_voting_greens = (double) number_of_will_votes / (double) total_number_of_greens;
 
         if (proportion_of_voting_greens < 20.0 && proportion_of_voting_greens > 0.0) {
@@ -100,18 +99,16 @@ public class Bayesian {
         // TODO Auto-generated method stub
 
         int[] red_turns = new int[5];
-        red_turns[0] = 5;
-        red_turns[1] = 5;
-        red_turns[2] = 5;
-        red_turns[3] = 5;
-        red_turns[4] = 5;
+        red_turns[0] = 1;
+        red_turns[1] = 1;
+        red_turns[2] = 1;
+        red_turns[3] = 1;
+        red_turns[4] = 1;
 
         double red_move_score = Red_score(red_turns);
-        
 
-        int blue_move = blue_move_agent(red_move_score, 5, 5, 5, 5, 5);
+        int blue_move = blue_move_agent(red_move_score, Config.N_ROUNDS, Config.N_GREY, 5, Config.N_GREENS, 25.0);
         System.out.println(blue_move);
-
 
     }
 

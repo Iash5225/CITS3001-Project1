@@ -5,10 +5,10 @@ public class Simulation {
     public static void main(String[] args) throws Exception {
         CLI cli = new CLI();
 
-        int n_games = 10;
+        int n_games = 1;
         int n_rounds = 10;
-        int n_greens = 25;
-        double prob_edge = 0.2;
+        int n_greens = 2000;
+        double prob_edge = 0.004;
         int n_greys = 3;
         int n_spies = 1;
         int u_lb = -1;
@@ -20,7 +20,7 @@ public class Simulation {
         boolean red_is_ai = true;
         boolean blue_is_ai = true;
         boolean blue_starts = true;
-        boolean visualise = false;
+        boolean visualise = true;
 
         int red_wins = 0;
         int blue_wins = 0;

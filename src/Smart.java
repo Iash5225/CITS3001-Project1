@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Bayesian {
+public class Smart {
     public GameBoard board;
     // TODO Auto-generated constructor stub
 

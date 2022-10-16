@@ -4,7 +4,7 @@ public class Game {
     public GameBoard board;
     public CLI cli;
     public Visualiser visualiser;
-    public Bayesian bayesian;
+    public Smart bayesian;
 
     public int n_rounds;
     public int current_round;
@@ -123,9 +123,9 @@ public class Game {
         while (action < 0 || action >= options.length) {
             if (blue_player.is_agent) {
                 // action = blue_player.get_next_move(options);
-                double score = Bayesian.Red_score(red_moves_played);
+                double score = Smart.Red_score(red_moves_played);
                 // System.out.println("Red's score is: " + score);
-                int move = Bayesian.blue_move_agent(score, n_rounds, board.greys.size(), board.get_n_voters(),
+                int move = Smart.blue_move_agent(score, n_rounds, board.greys.size(), board.get_n_voters(),
                         board.greens.size(), board.blue_energy, board.blue_starting_energy);
                 // System.out.println("-----------------------");
                 System.out.println("Blue Agent played:" + move);

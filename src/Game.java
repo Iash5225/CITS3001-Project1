@@ -4,7 +4,7 @@ public class Game {
     public GameBoard board;
     public CLI cli;
     public Visualiser visualiser;
-    public Smart bayesian;
+    public Agent bayesian;
 
     public int n_rounds;
     public int current_round;
@@ -70,7 +70,7 @@ public class Game {
             if (visualise) {
                 visualiser.update_visualiser();
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     System.out.println("got interrupted!");
                 }
@@ -101,7 +101,7 @@ public class Game {
         while (action < 0 || action >= options.length || !options[action]) {
             if (red_player.is_agent) {
                 action = red_player.get_next_move(options);
-                System.out.println("red Agent played:" + action);
+                //System.out.println("red Agent played:" + action);
             } else {
                 action = cli.get_red_move(options);
             }
@@ -123,13 +123,12 @@ public class Game {
         while (action < 0 || action >= options.length) {
             if (blue_player.is_agent) {
                 // action = blue_player.get_next_move(options);
-                double score = Smart.Red_score(red_moves_played);
+                double score = Agent.Red_score(red_moves_played);
                 // System.out.println("Red's score is: " + score);
-                int move = Smart.blue_move_agent(score, n_rounds, board.greys.size(), board.get_n_voters(),
-                        board.greens.size(), board.blue_energy, board.blue_starting_energy);
+                int move = Agent.blue_move_agent(score, n_rounds,board);
                 // System.out.println("-----------------------");
-                System.out.println("Blue Agent played:" + move);
-                cli.print_game_info_for_players(board);
+                //System.out.println("Blue Agent played:" + move);
+                // cli.print_game_info_for_players(board);
                 // System.out.println("-----------------------");
                 action = move;
             } else {

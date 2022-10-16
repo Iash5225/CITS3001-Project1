@@ -207,7 +207,8 @@ public class CLI {
     /**
      * Plots the green uncertainty distribution
      * 
-     * @param n_intervals
+     * @param n_intervals the number of intervals to use
+     * @param board       the game board
      */
     public void plot_green_uncertainty_distribution(GameBoard board, int n_intervals) {
         System.out.println("Green uncertainty distribution:");
@@ -224,6 +225,13 @@ public class CLI {
         }
     }
 
+    public void print_move_distribution()
+
+    /**
+     *   Print round info
+     * @param board
+     * @param round
+     */
     public void print_round_info(GameBoard board, int round) {
         System.out.println("=========================================");
         print_info("Round " + round, "green");
@@ -231,6 +239,10 @@ public class CLI {
         System.out.println("=========================================");
     }
 
+    /**
+     * Prints game over
+     * @param board
+     */
     public void print_game_over(GameBoard board) {
         System.out.println("=========================================");
         print_info("Game Over", "green");
@@ -238,6 +250,10 @@ public class CLI {
         System.out.println("=========================================");
     }
 
+    /**
+     * print game results
+     * @param board
+     */
     public void print_game_result(GameBoard board) {
         System.out.println("=========================================");
         print_info("Game Result", "green");

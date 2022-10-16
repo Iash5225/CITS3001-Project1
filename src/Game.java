@@ -12,6 +12,7 @@ public class Game {
     public Player red_player;
     public Player blue_player;
     public int[] red_moves_played;
+    public int[] blue_moves_played;
 
     public boolean is_human;
 
@@ -46,6 +47,7 @@ public class Game {
         }
 
         red_moves_played = new int[n_rounds];
+        blue_moves_played = new int[n_rounds];
         current_round = 0;
     }
 
@@ -59,8 +61,12 @@ public class Game {
         for (int i = 0; i < n_rounds; i++) {
 
             if (blue_starts) {
-                board.blue_turn(get_blue_action());
-                board.red_turn(get_red_action());
+                int blue_move = get_blue_action();
+                int red_move = get_red_action();
+                board.blue_turn(blue_move);
+                board.red_turn(red_move);
+                red_moves_played[i] = red_move;
+                blue_moves_played[i] = blue_move;
                 board.green_turn();
             } else {
                 board.red_turn(get_red_action());

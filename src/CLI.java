@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.stream.Collectors;
 import java.util.*;
 
 public class CLI {
@@ -228,30 +229,51 @@ public class CLI {
 
     /**
      * Prints a bar chart of the frequency of moves made by the agent
+     * 
      * @param game
      */
-    public void print_move_distribution(Game game){
-        System.out.println("Move distribution:");
-
+    public void print_move_distribution(Game game) {
         int[] red_moves = game.red_moves_played;
-        int[] bins = new int[7];
+        int[] red_frequency = new int[7];
+        int[] blue_moves = game.blue_moves_played;
+        int[] blue_frequency = new int[7];
 
-        List asList = Arrays.asList(red_moves);
-        //Set<Integer> mySet = new HashSet<Integer>(asList);
+        List<Integer> Red_asList = Arrays.stream(red_moves).boxed().collect(Collectors.toList());
+        List<Integer> Blue_asList = Arrays.stream(blue_moves).boxed().collect(Collectors.toList());
 
         for (int i = 0; i < 7; i++) {
-            int bin = Collections.frequency(asList, i);
-            bins[i]=bin;
+            int r_frequency = Collections.frequency(Red_asList, i);
+            int b_frequency = Collections.frequency(Blue_asList, i);
+            red_frequency[i] = r_frequency;
+            blue_frequency[i] = b_frequency;
         }
-        for (int i = 0; i < bins.length; i++) {
-            String range = String.format("%d", i);
-            print_bar(range, "\033[34m", bins[i]);
+        System.out.println("RED distribution:");
+        for (int i = 0; i < red_frequency.length-1; i++) {
+            String range = "Level " + String.format("%d", i) ;
+            if(i==0){
+                range = "Do nothing " + String.format("%d", i);
+            }            
+            //red histogram
+            print_bar(range, "\033[31m", red_frequency[i]);
         }
-
+        System.out.println("\n");
+        System.out.println("BLUE distribution:");
+        for (int i = 0; i < blue_frequency.length; i++) {
+            String range = "Level " + String.format("%d", i);
+            if (i == 0) {
+                range = "Do nothing " + String.format("%d", i);
+            }
+            if (i == 6) {
+                range = "Grey agents " + String.format("%d", i);
+            }
+            // blue histogram
+            print_bar(range, "\033[34m", blue_frequency[i]);
+        }
     }
 
     /**
-     *   Print round info
+     * Print round info
+     * 
      * @param board
      * @param round
      */
@@ -264,6 +286,7 @@ public class CLI {
 
     /**
      * Prints game over
+     * 
      * @param board
      */
     public void print_game_over(GameBoard board) {
@@ -275,6 +298,7 @@ public class CLI {
 
     /**
      * print game results
+     * 
      * @param board
      */
     public void print_game_result(GameBoard board) {

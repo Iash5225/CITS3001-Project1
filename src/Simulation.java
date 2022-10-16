@@ -6,7 +6,7 @@ public class Simulation {
         CLI cli = new CLI();
 
         int n_games = 1;
-        int n_rounds = 100;
+        int n_rounds = 50;
         int n_greens = 25;
         double prob_edge = 0.2;
         int n_greys = 3;
@@ -20,7 +20,7 @@ public class Simulation {
         boolean red_is_ai = true;
         boolean blue_is_ai = true;
         boolean blue_starts = true;
-        boolean visualise = true;
+        boolean visualise = false;
 
         int red_wins = 0;
         int blue_wins = 0;

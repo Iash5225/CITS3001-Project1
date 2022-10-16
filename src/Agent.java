@@ -82,11 +82,10 @@ public class Agent {
         }
 
         if (score <= max_score * 0.2 && score > 0.0 && available_moves[5]) {
-            if (n_of_grey_agents > 0) {
-                return 6;
-            } else {
-                return 5;
-            }
+            return 5;
+        }
+        if (blue_energy <= 6 && score > 0.0 && available_moves[6]) {
+            return 6;
         }
         if (score <= max_score * 0.4 && score > max_score * 0.2 && available_moves[4]) {
             return 4;

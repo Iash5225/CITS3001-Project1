@@ -5,8 +5,8 @@ public class Simulation {
     public static void main(String[] args) throws Exception {
         CLI cli = new CLI();
 
-        int n_games = 10000;
-        int n_rounds = 40;
+        int n_games = 1;
+        int n_rounds = 20;
         int n_greens = 100;
         double prob_edge = 0.3;
         int n_greys = 6;
@@ -49,7 +49,7 @@ public class Simulation {
             }
 
             n_unfollows += game.board.n_unfollows;
-            //cli.print_move_distribution(game);
+            cli.print_move_distribution(game);
         }
 
         cli.print_statistics(red_wins, blue_wins, draws, n_unfollows / n_games);

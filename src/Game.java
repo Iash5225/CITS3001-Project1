@@ -133,8 +133,8 @@ public class Game {
                 // System.out.println("Red's score is: " + score);
                 int move = Agent.blue_move_agent(score, n_rounds,board);
                 // System.out.println("-----------------------");
-                //System.out.println("Blue Agent played:" + move);
-                // cli.print_game_info_for_players(board);
+                System.out.println("Blue Agent played:" + move);
+                cli.print_game_info_for_players(board);
                 // System.out.println("-----------------------");
                 action = move;
             } else {

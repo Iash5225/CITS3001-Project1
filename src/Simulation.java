@@ -20,7 +20,7 @@ public class Simulation {
         boolean red_is_ai = true;
         boolean blue_is_ai = true;
         boolean blue_starts = true;
-        boolean visualise = false;
+        boolean visualise = true;
 
         int red_wins = 0;
         int blue_wins = 0;

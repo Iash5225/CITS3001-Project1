@@ -24,7 +24,7 @@ public class Game {
      *
      */
     public Game(GameBoard board, int n_rounds, boolean blue_starts, Player red_player, Player blue_player,
-            boolean visualise) {
+            boolean visualise, CLI cli) {
         this.board = board;
         this.n_rounds = n_rounds;
         this.blue_starts = blue_starts;
@@ -33,7 +33,7 @@ public class Game {
         this.is_human = !red_player.is_agent || !blue_player.is_agent;
         this.visualise = visualise;
 
-        this.cli = new CLI();
+        this.cli = cli;
         if (visualise) {
             this.visualiser = new Visualiser();
             this.visualiser.game = this;
@@ -69,7 +69,9 @@ public class Game {
         }
         if (is_human) {
             cli.print_game_result(board);
-            visualiser.exit();
+            if (visualise) {
+                visualiser.update_visualiser();
+            }
         }
         return board.get_score();
     }

@@ -260,7 +260,7 @@ public class CLI {
         }
         String[] option_strings = new String[valid_options.size()];
         option_strings[0] = "Do nothing";
-        for (int i = 1; i <= options.length; i++) {
+        for (int i = 1; i < options.length; i++) {
             option_strings[i] = "Send message " + i;
         }
         int choice = menu("Red's move:", option_strings, "Enter your choice: ");
@@ -303,5 +303,29 @@ public class CLI {
         System.out.println("Welcome to the Disinformation Game");
         System.out.println("By: Jean-Pierre le Breton & Iash Bashir");
         System.out.println("=========================================");
+    }
+
+    public Configuration get_config() {
+        int mode = menu("Choose a game mode.", new String[] { "Small", "Medium", "Large", "Custom" },
+                "Please choose a game mode.");
+        if (mode == 3) {
+            // Custom
+            int n_rounds = get_int_from_user("How many rounds?", 5, 100);
+            int n_greens = get_int_from_user("How many greens?", 5, 100);
+            double prob_edge = get_double_from_user("What is the probability of an edge in the green network?", 0,
+                    1);
+            int n_grey = get_int_from_user("How many greys agents should there be?", 0, 5);
+            int n_spies = get_int_from_user("How many of them should be spies?", 0, n_grey);
+            double u_lb = get_double_from_user("What is the lower bound of the starting uncertainty?", -1, 1);
+            double u_ub = get_double_from_user(
+                    "What is the upper bound of the starting uncertainty?", u_lb, 1);
+            double prob_vote = get_double_from_user("What is the proportion of the population that votes?", 0, 1);
+            double blue_starting_energy = get_int_from_user("How much energy should blue start with?", 0, 100);
+            int max_message_level = get_int_from_user("What is the maximum message level?", 2, 10);
+            return new Configuration(n_greens, prob_edge, n_grey, n_spies, u_lb, u_ub, prob_vote, blue_starting_energy,
+                    max_message_level, n_rounds);
+        } else {
+            return new Configuration(mode);
+        }
     }
 }

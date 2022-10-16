@@ -8,7 +8,8 @@ public class App {
             int choice = cli.menu("What would you like to do?", new String[] { "Play a game", "Quit" },
                     "Please choose an option.");
             if (choice == 0) {
-                GameController gc = new GameController(cli);
+                Configuration c = cli.get_config();
+                GameController gc = new GameController(cli, c);
                 gc.run();
             } else {
                 break;

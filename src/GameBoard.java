@@ -17,9 +17,12 @@ public class GameBoard {
         greens = init_greens(n_green, prob_edge, uncertainty_lb, uncertainty_ub, percentage_vote);
         greys = init_greys(n_grey, n_spies);
         // set blue energy
-        blue_energy = blue_starting_energy;
+        this.blue_energy = blue_starting_energy;
+        this.blue_uncertainty = 0;
+        this.red_uncertainty = 0;
+        this.max_message_level = max_message_level;
 
-        int n_unfollows = 0;
+        this.n_unfollows = 0;
     }
 
     private Vector<Green> init_greens(int n_green, double prob_edge, double uncertainty_lb,
@@ -65,24 +68,6 @@ public class GameBoard {
             }
         }
         return count;
-    }
-
-    public int[] get_valid_moves(String player) {
-        switch (player) {
-            case "red":
-                return new int[] { 1, 2, 3, 4, 5 };
-            case "blue":
-                int max_level = (int) Math.floor(blue_energy / 5);
-                int[] valid_moves = new int[max_level + 1];
-                for (int i = 0; i < max_level + 1; i++) {
-                    valid_moves[i] = i;
-                }
-                return valid_moves;
-            default:
-                System.out.println("Invalid player");
-                System.exit(1);
-        }
-        return null;
     }
 
     public boolean release_grey() {

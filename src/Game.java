@@ -1,3 +1,4 @@
+import java.lang.Thread;
 public class Game {
     public GameBoard board;
     public CLI cli;
@@ -68,6 +69,12 @@ public class Game {
             }
             if (Config.VISUALISE) {
                 visualiser.update_visualiser();
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    System.out.println("got interrupted!");
+                }
+
             }
             current_round++;
         }
@@ -82,15 +89,16 @@ public class Game {
      */
     public int get_red_action() {
         if (is_human) {
-            cli.print_info("Red's turn", "red");
-            cli.print_game_info_for_players(board);
+            //cli.print_info("Red's turn", "red");
+            //cli.print_game_info_for_players(board);
         }
         Boolean[] options = board.get_red_options();
         int action = -1;
 
         while (action < 0 || action >= options.length || !options[action]) {
-            if (blue_player.is_agent) {
-                action = blue_player.get_next_move(options);
+            if (red_player.is_agent) {
+                action = red_player.get_next_move(options);
+                System.out.println("red Agent played:" + action);
             } else {
                 action = cli.get_red_move(options);
             }
@@ -103,20 +111,23 @@ public class Game {
      */
     public int get_blue_action() {
         if (!red_player.is_agent || !blue_player.is_agent) {
-            cli.print_info("Blue's Turn", "blue");
+            //cli.print_info("Blue's Turn", "blue");
             cli.print_game_info_for_players(board);
         }
         Boolean[] options = board.get_blue_options();
         int action = -1;
 
-        while (action < 0 || action >= options.length || !options[action]) {
+        while (action < 0 || action >= options.length) {
             if (blue_player.is_agent) {
-                action = blue_player.get_next_move(options);
-                double score = bayesian.Red_score(red_moves_played);
+                //action = blue_player.get_next_move(options);
+                double score = Bayesian.Red_score(red_moves_played);
                 //System.out.println("Red's score is: " + score);
-                int move = bayesian.blue_move_agent(score,n_rounds,board.greys.size(),board.get_n_voters(),board.greens.size(),board.blue_energy);
-                System.out.println(move);
-                //action = move;
+                int move = Bayesian.blue_move_agent(score,n_rounds,board.greys.size(),board.get_n_voters(),board.greens.size(),board.blue_energy);
+                //  System.out.println("-----------------------");
+                  System.out.println("Blue Agent played:" + move);
+                  cli.print_game_info_for_players(board);
+                //  System.out.println("-----------------------");
+                action = move;
             } else {
                 action = cli.get_blue_move(options);
             }

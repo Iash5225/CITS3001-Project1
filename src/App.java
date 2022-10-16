@@ -23,7 +23,12 @@ public class App {
 
             Game game = new Game(gb, Config.N_ROUNDS, true, red, blue);
 
+            
+
             int score = game.run();
+            
+
+            //game.cli.plot_green_uncertainty_distribution(gb, 10);
 
             if (score < 0) {
                 red_wins++;

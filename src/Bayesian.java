@@ -4,9 +4,6 @@ public class Bayesian {
     public GameBoard board;
     // TODO Auto-generated constructor stub
 
-    static int number_of_levels = 6;
-    static double max_score = Config.N_ROUNDS * 5 + 25;
-
     /**
      * Evaluate the blue turns score for the game
      * Higher the score the agressive the agent is playing
@@ -50,7 +47,7 @@ public class Bayesian {
             int number_of_will_votes,
             int total_number_of_greens, double blue_energy) {
         double score = 0;
-        score = red_move_score;
+        //score = red_move_score;
         double proportion_of_voting_greens = (double) number_of_will_votes / (double) total_number_of_greens;
 
         // assess the proportion of voting greens
@@ -85,24 +82,24 @@ public class Bayesian {
             score = score + 5;
         }
 
-        if (score <= max_score * 0.2) {
+        if (score <= Config.max_score * 0.2) {
             if (n_of_grey_agents > 0) {
                 return 6;
             } else {
-                return 1;
+                return 5;
             }
         }
-        if (score <= max_score * 0.4 && score > max_score * 0.2) {
-            return 2;
-        }
-        if (score <= max_score * 0.6 && score > max_score * 0.4) {
-            return 3;
-        }
-        if (score <= max_score * 0.8 && score > max_score * 0.6) {
+        if (score <= Config.max_score * 0.4 && score > Config.max_score * 0.2) {
             return 4;
         }
-        if (score <= max_score && score > max_score * 0.8) {
-            return 5;
+        if (score <= Config.max_score * 0.6 && score > Config.max_score * 0.4) {
+            return 3;
+        }
+        if (score <= Config.max_score * 0.8 && score > Config.max_score * 0.6) {
+            return 2;
+        }
+        if (score <= Config.max_score && score > Config.max_score * 0.8) {
+            return 1;
         }
         return 0;
     }

@@ -132,28 +132,28 @@ public class Agent {
             }
         }
 
-        double proportion_of_following_red = n_red_followers / total_number_of_greens;
+        double proportion_of_following_red = (double) n_red_followers / total_number_of_greens;
         double proportion_of_voting_greens = (double) (num_of_voters / total_number_of_greens);
 
         // assess the proportion of voting greens
-        // if low, then the red agent should be more aggressive
-        // if high, then the red agent should be more passive
-        if (proportion_of_voting_greens <= 0.2 && proportion_of_voting_greens > 0.0) {
-            score = score + 0.5;
+        // if low, then the red agent should be more passive
+        // if high, then the red agent should be more agressive
+        if (proportion_of_voting_greens <= 0.2 && proportion_of_voting_greens >= 0.0) {
+            score = score + 0.1;
         } else if (proportion_of_voting_greens <= 0.4 && proportion_of_voting_greens > 0.2) {
-            score = score + 0.4;
+            score = score + 0.2;
         } else if (proportion_of_voting_greens <= 0.6 && proportion_of_voting_greens > 0.4) {
             score = score + 0.3;
         } else if (proportion_of_voting_greens <= 0.8 && proportion_of_voting_greens > 0.6) {
-            score = score + 0.2;
+            score = score + 0.4;
         } else if (proportion_of_voting_greens <= 1.0 && proportion_of_voting_greens > 0.8) {
-            score = score + 0.1;
+            score = score + 0.5;
         }
 
         // assess the proportion of following red
         // if low, then the red agent should be more agressive
         // if high, then the red agent should be more passive
-        if (proportion_of_following_red <= 0.2 && proportion_of_following_red > 0.0) {
+        if (proportion_of_following_red <= 0.2 && proportion_of_following_red >= 0.0) {
             score = score + 0.5;
         } else if (proportion_of_following_red <= 0.4 && proportion_of_following_red > 0.2) {
             score = score + 0.4;

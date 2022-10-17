@@ -37,8 +37,10 @@ public class Green extends GameObject {
         if (uncertainty > u) {
             // if they share the same opinion
             if (willVote == v) {
+                // they become less uncertain proportional to the difference in uncertainty
                 du -= (uncertainty - u) / 5;
             } else {
+                // they become more uncertain proportional to the difference in uncertainty
                 du += (uncertainty - u) / 5;
             }
         }
@@ -77,8 +79,8 @@ public class Green extends GameObject {
     public int update() {
         uncertainty += du;
         du = 0;
-        uncertainty = Math.min(uncertainty, 0.999999);
-        uncertainty = Math.max(uncertainty, -1);
+        uncertainty = Math.min(uncertainty, 0.999999); // cap uncertainty at just below 1
+        uncertainty = Math.max(uncertainty, -1); // cap uncertainty at -1
 
         if (Math.random() < uncertainty) {
             willVote = !willVote;

@@ -1,10 +1,12 @@
 public class Grey extends GameObject {
     public boolean isSpy;
-    public boolean isAlive;
 
     public Grey(boolean isSpy) {
         super();
         this.isSpy = isSpy;
-        this.isAlive = true;
+    }
+
+    public void print() {
+        System.out.printf("%-2d | %-5s", id, isSpy);
     }
 }

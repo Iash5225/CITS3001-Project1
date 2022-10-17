@@ -35,18 +35,41 @@ public class Agent {
         double blue_starting_energy = gb.blue_starting_energy;
         double proportion_of_voting_greens = (double) (gb.get_n_voters() / total_number_of_greens);
 
+        int n_non_followers = 0;
+        for (Green green : gb.greens) {
+            if (!green.followsRed) {
+                n_non_followers++;
+            }
+        }
+        double proportion_of_non_red_followers = n_non_followers / total_number_of_greens;
+
         // assess the proportion of voting greens
         // if low, then the blue agent should be more aggressive
         // if high, then the blue agent should be more passive
-        if (proportion_of_voting_greens < 0.2 && proportion_of_voting_greens > 0.0) {
+        if (proportion_of_voting_greens <= 0.2 && proportion_of_voting_greens > 0.0) {
             score = score + 0.5;
-        } else if (proportion_of_voting_greens < 0.4 && proportion_of_voting_greens > 0.2) {
+        } else if (proportion_of_voting_greens <= 0.4 && proportion_of_voting_greens > 0.2) {
             score = score + 0.4;
-        } else if (proportion_of_voting_greens < 0.6 && proportion_of_voting_greens > 0.4) {
+        } else if (proportion_of_voting_greens <= 0.6 && proportion_of_voting_greens > 0.4) {
             score = score + 0.3;
-        } else if (proportion_of_voting_greens < 0.8 && proportion_of_voting_greens > 0.6) {
+        } else if (proportion_of_voting_greens <= 0.8 && proportion_of_voting_greens > 0.6) {
             score = score + 0.2;
-        } else if (proportion_of_voting_greens < 1.0 && proportion_of_voting_greens > 0.8) {
+        } else if (proportion_of_voting_greens <= 1.0 && proportion_of_voting_greens > 0.8) {
+            score = score + 0.1;
+        }
+
+        // assess the proportion of not following red
+        // if low, then the blue agent should be more agressive
+        // if high, then the red agent should be more passive
+        if (proportion_of_non_red_followers <= 0.2 && proportion_of_non_red_followers > 0.0) {
+            score = score + 0.5;
+        } else if (proportion_of_non_red_followers <= 0.4 && proportion_of_non_red_followers > 0.2) {
+            score = score + 0.4;
+        } else if (proportion_of_non_red_followers <= 0.6 && proportion_of_non_red_followers > 0.4) {
+            score = score + 0.3;
+        } else if (proportion_of_non_red_followers <= 0.8 && proportion_of_non_red_followers > 0.6) {
+            score = score + 0.2;
+        } else if (proportion_of_non_red_followers <= 1.0 && proportion_of_non_red_followers > 0.8) {
             score = score + 0.1;
         }
 
@@ -96,21 +119,25 @@ public class Agent {
      */
     public static int red_move_agent(double blue_move_score, int n_rounds, GameBoard gb) {
         double score = 0;
-        score = blue_move_score/n_rounds;
+        score = blue_move_score / n_rounds;
         int total_number_of_greens = gb.greens.size();
         Boolean[] available_moves = gb.get_red_options();
 
         double num_of_voters = (double) gb.get_n_voters();
-        double n_unfollows = (double) gb.n_unfollows;
-        double proportion_of_unfollows = n_unfollows / num_of_voters;
-        double proportion_of_following_red = 1- proportion_of_unfollows;
 
-        //double proportion_of_following_red = (double) 1 - (gb.n_unfollows / total_number_of_greens);
+        int n_red_followers = 0;
+        for (Green green : gb.greens) {
+            if (green.followsRed) {
+                n_red_followers++;
+            }
+        }
+
+        double proportion_of_following_red = n_red_followers / total_number_of_greens;
         double proportion_of_voting_greens = (double) (num_of_voters / total_number_of_greens);
 
         // assess the proportion of voting greens
-        // if low, then the blue agent should be more aggressive
-        // if high, then the blue agent should be more passive
+        // if low, then the red agent should be more aggressive
+        // if high, then the red agent should be more passive
         if (proportion_of_voting_greens <= 0.2 && proportion_of_voting_greens > 0.0) {
             score = score + 0.5;
         } else if (proportion_of_voting_greens <= 0.4 && proportion_of_voting_greens > 0.2) {
@@ -126,15 +153,15 @@ public class Agent {
         // assess the proportion of following red
         // if low, then the red agent should be more agressive
         // if high, then the red agent should be more passive
-        if (proportion_of_following_red < 0.2 && proportion_of_following_red > 0.0) {
+        if (proportion_of_following_red <= 0.2 && proportion_of_following_red > 0.0) {
             score = score + 0.5;
-        } else if (proportion_of_following_red < 0.4 && proportion_of_following_red > 0.2) {
+        } else if (proportion_of_following_red <= 0.4 && proportion_of_following_red > 0.2) {
             score = score + 0.4;
-        } else if (proportion_of_following_red < 0.6 && proportion_of_following_red > 0.4) {
+        } else if (proportion_of_following_red <= 0.6 && proportion_of_following_red > 0.4) {
             score = score + 0.3;
-        } else if (proportion_of_following_red < 0.8 && proportion_of_following_red > 0.6) {
+        } else if (proportion_of_following_red <= 0.8 && proportion_of_following_red > 0.6) {
             score = score + 0.2;
-        } else if (proportion_of_following_red < 1.0 && proportion_of_following_red > 0.8) {
+        } else if (proportion_of_following_red <= 1.0 && proportion_of_following_red > 0.8) {
             score = score + 0.1;
         }
 

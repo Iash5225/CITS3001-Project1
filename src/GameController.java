@@ -7,6 +7,9 @@ public class GameController {
         this.c = config;
     }
 
+    /**
+     * Runs the game.
+     */
     public void run() {
 
         boolean red_is_ai = cli.get_boolean_from_user("Would you like red to be an AI?");

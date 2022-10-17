@@ -15,6 +15,9 @@ public class Green extends GameObject {
         friends = new Vector<Green>();
     }
 
+    /**
+     * Prints the green agents information, in a format that can be read by the user
+     */
     public void print() {
         String u_rounded = String.format("%.2f", uncertainty);
         System.out.printf("%-2d | %-11s | %-8s | %-10s", id, u_rounded, willVote, followsRed);

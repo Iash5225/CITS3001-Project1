@@ -4,11 +4,10 @@ public class Simulation {
 
     public static void main(String[] args) throws Exception {
         CLI cli = new CLI();
-
-        int n_games = 10;
-        int n_rounds = 50;
+        int n_games = 1000;
+        int n_rounds = 500;
         int n_greens = 25;
-        double prob_edge = 0.3;
+        double prob_edge = 0.7;
         int n_greys = 10;
         int n_spies = 1;
         int u_lb = -1;
@@ -49,8 +48,8 @@ public class Simulation {
             }
 
             n_unfollows += game.board.n_unfollows;
-            cli.print_move_distribution(game);
-            cli.plot_green_uncertainty_distribution(gb, 10);
+            // cli.print_move_distribution(game);
+            // cli.plot_green_uncertainty_distribution(gb, 10);
         }
         cli.print_statistics(red_wins, blue_wins, draws, n_unfollows / n_games);
     }

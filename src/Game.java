@@ -98,7 +98,9 @@ public class Game {
     }
 
     /**
-     * Red's turn.
+     * Red turn
+     * 
+     * @return The move red plays.
      */
     public int get_red_action() {
         if (is_human) {
@@ -110,17 +112,10 @@ public class Game {
 
         while (action < 0 || action >= options.length || !options[action]) {
             if (red_player.is_agent) {
-                //action = red_player.get_next_move(options);
+                // action = red_player.get_next_move(options);
                 double score = Agent.Moves_evaluator(blue_moves_played);
-                // System.out.println("Red's score is: " + score);
                 int move = Agent.red_move_agent(score, n_rounds, board);
-                // System.out.println("-----------------------");
-                //System.out.println("Red Agent played:" + move);
-                //cli.print_game_info_for_players(board);
-                // System.out.println("-----------------------");
                 action = move;
-
-                //System.out.println("red Agent played:" + action);
             } else {
                 action = cli.get_red_move(options);
             }
@@ -130,6 +125,8 @@ public class Game {
 
     /**
      * Blue's turn.
+     * 
+     * @return The move blue plays.
      */
     public int get_blue_action() {
         if (!red_player.is_agent || !blue_player.is_agent) {
@@ -144,10 +141,10 @@ public class Game {
                 // action = blue_player.get_next_move(options);
                 double score = Agent.Moves_evaluator(red_moves_played);
                 // System.out.println("Red's score is: " + score);
-                int move = Agent.blue_move_agent(score, n_rounds,board);
+                int move = Agent.blue_move_agent(score, n_rounds, board);
                 // System.out.println("-----------------------");
-                //System.out.println("Blue Agent played:" + move);
-                //cli.print_game_info_for_players(board);
+                // System.out.println("Blue Agent played:" + move);
+                // cli.print_game_info_for_players(board);
                 // System.out.println("-----------------------");
                 action = move;
             } else {

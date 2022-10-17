@@ -8,10 +8,13 @@ public class Visualiser {
     public Graph graph;
     public Game game;
 
-    public void main(String args[]) {
-        setup();
-    }
+    // public void main(String args[]) {
+    // setup();
+    // }
 
+    /**
+     * Sets up the visualiser.
+     */
     public void setup() {
         // Visualising intial set up
         System.setProperty("org.graphstream.ui", "swing");
@@ -56,6 +59,9 @@ public class Visualiser {
         update_visualiser();
     }
 
+    /**
+     * Updates the visualiser, by updating the green agent properties
+     */
     public void update_visualiser() {
         game.board.greens.forEach((green) -> {
             Node node = graph.getNode(String.valueOf(green.id));
@@ -79,26 +85,9 @@ public class Visualiser {
         });
     }
 
-    public void add_Grey_Nodes() {
-        Grey grey = game.board.greys.get(0);
-        Node node = graph.addNode(String.valueOf(grey.id));
-        node.setAttribute("ui.label", String.valueOf(grey.id) + ":" + grey.isSpy);
-        node.setAttribute("ui.class", "grey");
-        explore(graph.getNode("0"));
-        graph.removeNode(node);
-    }
-
-    public void explore(Node source) {
-        Iterator<? extends Node> k = source.getBreadthFirstIterator();
-        while (k.hasNext()) {
-            Node next = k.next();
-            String initial_class = String.valueOf(next.getLabel("ui.class"));
-            next.setAttribute("ui.class", "marked");
-            sleep();
-            next.setAttribute("ui.class", initial_class);
-        }
-    }
-
+    /*
+     * System sleep call, for a buffered visualisation
+     */
     protected void sleep() {
         try {
             Thread.sleep(600);
@@ -106,6 +95,9 @@ public class Visualiser {
         }
     }
 
+    /**
+     * The style sheet for the visualiser
+     */
     protected String styleSheet = "node {fill-color: green;text-size: 20;text-alignment: center;z-index:2;size:20px;}" +
             "node.followsbluewillvote {fill-color: rgb(96,190,230);fill-mode:plain;shadow-color:rgb(61,66,107);shadow-width:5px;shadow-offset:0;shadow-mode:plain;}"
             +
@@ -116,6 +108,9 @@ public class Visualiser {
             "node.grey {fill-color: grey;}" +
             "node.marked {fill-color: purple;arrow-size: 3px, 2px;}";
 
+    /**
+     * Clearing the graph for the next visualisation
+     */
     public void exit() {
         graph.clear();
         graph.display(false);

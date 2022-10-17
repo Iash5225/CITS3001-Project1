@@ -16,6 +16,7 @@ public class CLI {
 
     /**
      * Print the game info for the players.
+     * 
      * @param info
      */
     public void print_info(String info) {
@@ -79,9 +80,10 @@ public class CLI {
 
     /**
      * Prints the menu of the game.
-     * @param header the header of the table
+     * 
+     * @param header  the header of the table
      * @param options the options of the table
-     * @param prompt the prompt of the table
+     * @param prompt  the prompt of the table
      * @return the index of the option chosen
      */
     public int menu(String header, String[] options, String prompt) {
@@ -106,10 +108,45 @@ public class CLI {
     }
 
     /**
+     * Prints the menu of the game.
+     * 
+     * @param header  the header of the table
+     * @param options the options of the table
+     * @param prompt  the prompt of the table
+     * @return the index of the option chosen
+     */
+    public int menu(String header, String[] options, String prompt, GameBoard board) {
+        int choice = -1;
+        while (true) {
+            System.out.println("=========================================");
+            System.out.println(header);
+            for (int i = 0; i < options.length; i++) {
+                System.out.println(i + ": " + options[i]);
+            }
+            System.out.println("=========================================");
+            System.out.print(prompt);
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+                if (choice >= 0 && choice < options.length) {
+                    return choice;
+                }
+
+            } catch (NumberFormatException e) {
+                // do nothing
+            }
+            if (choice == 9) {
+                debug_menu(board);
+            } else {
+                System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    /**
      * 
      * @param prompt The prompt to display
-     * @param min   The minimum value
-     * @param max  The maximum value
+     * @param min    The minimum value
+     * @param max    The maximum value
      * @return The integer input
      */
     public int get_int_from_user(String prompt, int min, int max) {
@@ -130,8 +167,8 @@ public class CLI {
 
     /**
      * 
-     * @param prompt   the prompt to display
-     * @param min     the minimum value for the number
+     * @param prompt the prompt to display
+     * @param min    the minimum value for the number
      * @param max    the maximum value for the number
      * @return the Double input
      */
@@ -190,6 +227,21 @@ public class CLI {
         System.out.println();
     }
 
+    public void display_greys(Vector<Grey> greys) {
+        // set color to green
+        System.out.print("\033[0;37m");
+        System.out.println("Greys:");
+        // reset color
+        System.out.print("\033[0m");
+        // column names
+        System.out.println("id | isSpy");
+        System.out.println("-----------");
+        for (Grey g : greys) {
+            g.print();
+        }
+        System.out.println();
+    }
+
     /**
      * Prints the debug menu
      * 
@@ -198,7 +250,8 @@ public class CLI {
     public void debug_menu(GameBoard board) {
         String[] options = {
                 "Print green info",
-                "Plot green uncertainty distribution"
+                "Plot green uncertainty distribution",
+                "Print grey info",
         };
         int choice = menu(
                 "Debug menu:",
@@ -210,6 +263,9 @@ public class CLI {
                 break;
             case 1:
                 plot_green_uncertainty_distribution(board, 10);
+                break;
+            case 2:
+                display_greys(board.greys);
                 break;
             default:
                 System.out.println("Very Invalid choice");
@@ -369,7 +425,7 @@ public class CLI {
      * @param options all the available moves for the red player
      * @return the move selected by the red player
      */
-    public int get_red_move(Boolean[] options) {
+    public int get_red_move(Boolean[] options, GameBoard board) {
         Vector<Integer> valid_options = new Vector<Integer>();
         for (int i = 0; i < options.length; i++) {
             if (options[i]) {
@@ -381,7 +437,7 @@ public class CLI {
         for (int i = 1; i < options.length; i++) {
             option_strings[i] = "Send message " + i;
         }
-        int choice = menu("Red's move:", option_strings, "Enter your choice: ");
+        int choice = menu("Red's move:", option_strings, "Enter your choice: ", board);
         return valid_options.get(choice);
     }
 
@@ -390,7 +446,7 @@ public class CLI {
      * @param options all the available moves for the blue player
      * @return the move selected by the blue player
      */
-    public int get_blue_move(Boolean[] options) {
+    public int get_blue_move(Boolean[] options, GameBoard board) {
         Vector<Integer> valid_options = new Vector<Integer>();
         for (int i = 0; i < options.length; i++) {
             if (options[i]) {
@@ -407,15 +463,15 @@ public class CLI {
             }
         }
 
-        int choice = menu("Blue's move:", option_strings, "Enter your choice: ");
+        int choice = menu("Blue's move:", option_strings, "Enter your choice: ", board);
         return valid_options.get(choice);
     }
 
     /**
      * 
-     * @param red_wins  the number of times the red player won
-     * @param blue_wins the number of times the blue player won
-     * @param draws    the number of draws
+     * @param red_wins      the number of times the red player won
+     * @param blue_wins     the number of times the blue player won
+     * @param draws         the number of draws
      * @param avg_unfollows the average number of unfollows per game
      */
     public void print_statistics(int red_wins, int blue_wins, int draws, double avg_unfollows) {

@@ -117,7 +117,7 @@ public class Game {
                 int move = Agent.red_move_agent(score, n_rounds, board);
                 action = move;
             } else {
-                action = cli.get_red_move(options);
+                action = cli.get_red_move(options, board);
             }
         }
         return action;
@@ -148,7 +148,7 @@ public class Game {
                 // System.out.println("-----------------------");
                 action = move;
             } else {
-                action = cli.get_blue_move(options);
+                action = cli.get_blue_move(options, board);
             }
         }
         return action;

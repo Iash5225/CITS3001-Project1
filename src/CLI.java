@@ -1,5 +1,7 @@
 import java.util.Scanner;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.*;
 
 public class CLI {
     Scanner scanner;
@@ -12,11 +14,21 @@ public class CLI {
 
     }
 
+    /**
+     * Print the game info for the players.
+     * @param info
+     */
     public void print_info(String info) {
         System.out.print("\033[0m");
         System.out.println(info);
     }
 
+    /**
+     * Print the game info for the players with a color.
+     * 
+     * @param info  the info to print
+     * @param color the color of the info
+     */
     public void print_info(String info, String color) {
         System.out.print("[INFO] ");
         switch (color) {
@@ -65,6 +77,13 @@ public class CLI {
         System.out.println("\033[0m");
     }
 
+    /**
+     * Prints the menu of the game.
+     * @param header the header of the table
+     * @param options the options of the table
+     * @param prompt the prompt of the table
+     * @return the index of the option chosen
+     */
     public int menu(String header, String[] options, String prompt) {
         while (true) {
             System.out.println("=========================================");
@@ -86,6 +105,13 @@ public class CLI {
         }
     }
 
+    /**
+     * 
+     * @param prompt The prompt to display
+     * @param min   The minimum value
+     * @param max  The maximum value
+     * @return The integer input
+     */
     public int get_int_from_user(String prompt, int min, int max) {
         while (true) {
             System.out.print(prompt + " (" + min + "-" + max + "): ");
@@ -102,6 +128,13 @@ public class CLI {
         }
     }
 
+    /**
+     * 
+     * @param prompt   the prompt to display
+     * @param min     the minimum value for the number
+     * @param max    the maximum value for the number
+     * @return the Double input
+     */
     public double get_double_from_user(String prompt, double min, double max) {
         while (true) {
             System.out.print(prompt + " (" + min + "-" + max + "): ");
@@ -118,6 +151,11 @@ public class CLI {
         }
     }
 
+    /**
+     * 
+     * @param prompt the prompt to show the user
+     * @return whether the user wants to continue
+     */
     public boolean get_boolean_from_user(String prompt) {
         while (true) {
             System.out.print(prompt + " (y/n): ");
@@ -152,6 +190,11 @@ public class CLI {
         System.out.println();
     }
 
+    /**
+     * Prints the debug menu
+     * 
+     * @param board
+     */
     public void debug_menu(GameBoard board) {
         String[] options = {
                 "Print green info",
@@ -174,6 +217,11 @@ public class CLI {
         }
     }
 
+    /**
+     * Prints the public game in for the players
+     * 
+     * @param board the game board
+     */
     public void print_game_info_for_players(GameBoard board) {
         // print a bar chart of the number of greens that will vote
         int n_voters = board.get_n_voters();
@@ -207,7 +255,8 @@ public class CLI {
     /**
      * Plots the green uncertainty distribution
      * 
-     * @param n_intervals
+     * @param n_intervals the number of intervals to use
+     * @param board       the game board
      */
     public void plot_green_uncertainty_distribution(GameBoard board, int n_intervals) {
         System.out.println("Green uncertainty distribution:");
@@ -224,6 +273,60 @@ public class CLI {
         }
     }
 
+    /**
+     * Prints a bar chart of the frequency of moves made by the agent
+     * 
+     * @param game
+     */
+    public void print_move_distribution(Game game) {
+        int[] red_moves = game.red_moves_played;
+        int[] red_frequency = new int[7];
+        int[] blue_moves = game.blue_moves_played;
+        int[] blue_frequency = new int[7];
+
+        List<Integer> Red_asList = Arrays.stream(red_moves).boxed().collect(Collectors.toList());
+        List<Integer> Blue_asList = Arrays.stream(blue_moves).boxed().collect(Collectors.toList());
+
+        for (int i = 0; i < 7; i++) {
+            int r_frequency = Collections.frequency(Red_asList, i);
+            int b_frequency = Collections.frequency(Blue_asList, i);
+            red_frequency[i] = r_frequency;
+            blue_frequency[i] = b_frequency;
+        }
+        System.out.print("\033[0;31m");
+        System.out.println("RED distribution:");
+        System.out.print("\033[0m");
+        for (int i = 0; i < red_frequency.length - 1; i++) {
+            String range = "Level " + String.format("%d", i);
+            if (i == 0) {
+                range = "Do nothing " + String.format("%d", i);
+            }
+            // red histogram
+            print_bar(range, "\033[31m", red_frequency[i]);
+        }
+        System.out.println("\n");
+        System.out.print("\033[0;34m");
+        System.out.println("BLUE distribution:");
+        System.out.print("\033[0m");
+        for (int i = 0; i < blue_frequency.length; i++) {
+            String range = "Level " + String.format("%d", i);
+            if (i == 0) {
+                range = "Do nothing " + String.format("%d", i);
+            }
+            if (i == 6) {
+                range = "Grey agents " + String.format("%d", i);
+            }
+            // blue histogram
+            print_bar(range, "\033[34m", blue_frequency[i]);
+        }
+    }
+
+    /**
+     * Print round info
+     * 
+     * @param board the game board
+     * @param round the current round
+     */
     public void print_round_info(GameBoard board, int round) {
         System.out.println("=========================================");
         print_info("Round " + round, "green");
@@ -231,6 +334,11 @@ public class CLI {
         System.out.println("=========================================");
     }
 
+    /**
+     * Prints game over message
+     * 
+     * @param board the game board
+     */
     public void print_game_over(GameBoard board) {
         System.out.println("=========================================");
         print_info("Game Over", "green");
@@ -238,6 +346,11 @@ public class CLI {
         System.out.println("=========================================");
     }
 
+    /**
+     * print game results
+     * 
+     * @param board the game board
+     */
     public void print_game_result(GameBoard board) {
         System.out.println("=========================================");
         print_info("Game Result", "green");
@@ -251,6 +364,11 @@ public class CLI {
         System.out.println("=========================================");
     }
 
+    /**
+     * 
+     * @param options all the available moves for the red player
+     * @return the move selected by the red player
+     */
     public int get_red_move(Boolean[] options) {
         Vector<Integer> valid_options = new Vector<Integer>();
         for (int i = 0; i < options.length; i++) {
@@ -267,6 +385,11 @@ public class CLI {
         return valid_options.get(choice);
     }
 
+    /**
+     * 
+     * @param options all the available moves for the blue player
+     * @return the move selected by the blue player
+     */
     public int get_blue_move(Boolean[] options) {
         Vector<Integer> valid_options = new Vector<Integer>();
         for (int i = 0; i < options.length; i++) {
@@ -288,6 +411,13 @@ public class CLI {
         return valid_options.get(choice);
     }
 
+    /**
+     * 
+     * @param red_wins  the number of times the red player won
+     * @param blue_wins the number of times the blue player won
+     * @param draws    the number of draws
+     * @param avg_unfollows the average number of unfollows per game
+     */
     public void print_statistics(int red_wins, int blue_wins, int draws, double avg_unfollows) {
         System.out.println("=========================================");
         print_info("Statistics", "green");
@@ -298,6 +428,9 @@ public class CLI {
         System.out.println("=========================================");
     }
 
+    /**
+     * Prints the welcome message
+     */
     public void print_welcome() {
         System.out.println("=========================================");
         System.out.println("Welcome to the Disinformation Game");

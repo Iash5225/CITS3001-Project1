@@ -27,6 +27,15 @@ public class GameBoard {
         this.n_unfollows = 0;
     }
 
+    /**
+     * Initialise the greens
+     * @param n_green number of greens
+     * @param prob_edge probability of an edge between two greens 
+     * @param uncertainty_lb lower bound of uncertainty
+     * @param uncertainty_ub upper bound of uncertainty
+     * @param percentage_vote percentage of greens that vote
+     * @return vector of greens
+     */
     private Vector<Green> init_greens(int n_green, double prob_edge, double uncertainty_lb,
             double uncertainty_ub, double percentage_vote) {
         // create n_green greens with parameters
@@ -47,6 +56,12 @@ public class GameBoard {
         return greens;
     }
 
+    /**
+     * Initialise the greys
+     * @param n_grey number of greys
+     * @param n_spies number of spies
+     * @return vector of greys
+     */
     private Vector<Grey> init_greys(int n_grey, int n_spies) {
         // create n_grey greys with parameters and n_spies spies
         Vector<Grey> greys = new Vector<Grey>();
@@ -60,7 +75,7 @@ public class GameBoard {
     }
 
     /**
-     * Returns the number of green that will vote
+     * @return the number of greens that will vote
      */
     public int get_n_voters() {
         int count = 0;
@@ -72,6 +87,10 @@ public class GameBoard {
         return count;
     }
 
+    /**
+     * Grey agent interracting with the game board
+     * @return whether or not a grey is released
+     */
     public boolean release_grey() {
         Grey grey_agent = greys.remove((int) Math.random() * greys.size());
         if (grey_agent.isSpy) {
@@ -86,6 +105,9 @@ public class GameBoard {
         return grey_agent.isSpy;
     }
 
+    /**
+     * @return all the avaialble moves blue can make
+     */
     public Boolean[] get_blue_options() {
         int max_level = Math.min((int) Math.floor(blue_energy), max_message_level);
 
@@ -107,6 +129,9 @@ public class GameBoard {
         return options;
     }
 
+    /**
+     * @return all the avaialble moves red can make
+     */
     public Boolean[] get_red_options() {
         Boolean[] options = new Boolean[max_message_level + 1];
         for (int i = 0; i < max_message_level + 1; i++) {
@@ -115,6 +140,10 @@ public class GameBoard {
         return options;
     }
 
+    /**
+     * 
+     * @return the game score
+     */
     public int get_score() {
         int voters = 0;
         int non_voters = 0;
@@ -128,6 +157,10 @@ public class GameBoard {
         return voters - non_voters;
     }
 
+    /**
+     * 
+     * @param action the action blue takes
+     */
     public void blue_turn(int action) {
         if (action == 0) {
             // do nothing
@@ -154,6 +187,10 @@ public class GameBoard {
         }
     }
 
+    /**
+     * 
+     * @param action the action red takes
+     */
     public void red_turn(int action) {
         if (action == 0) {
             // do nothing
@@ -176,6 +213,9 @@ public class GameBoard {
         }
     }
 
+    /**
+     *  green interraction with the game board
+     */
     public void green_turn() {
         for (Green g : greens) {
             g.update();

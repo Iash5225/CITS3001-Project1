@@ -1,6 +1,6 @@
 public class Simulation {
     CLI cli;
-    static int n_games = 1000;
+    static int n_games = 1;
     static int n_rounds = 10;
     static int n_greens = 50;
     static double prob_edge = 0.3;
@@ -108,6 +108,7 @@ public class Simulation {
     }
 
     public int[] uncertainty_simulation(double u_lb, double u_ub) {
+        CLI cli = new CLI();
         int[] win_summary = new int[2];
         int red_wins = 0;
         int blue_wins = 0;
@@ -128,9 +129,11 @@ public class Simulation {
             } else if (score > 0) {
                 blue_wins++;
             }
+            cli.plot_green_uncertainty_distribution(gb, 10);
         }
         win_summary[0] = blue_wins;
         win_summary[1] = red_wins;
+
         return win_summary;
     }
 }

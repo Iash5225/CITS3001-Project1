@@ -110,7 +110,7 @@ public class Game {
 
         while (action < 0 || action >= options.length || !options[action]) {
             if (red_player.is_agent) {
-                action = red_player.get_next_move(options);
+                //action = red_player.get_next_move(options);
                 double score = Agent.Moves_evaluator(blue_moves_played);
                 // System.out.println("Red's score is: " + score);
                 int move = Agent.red_move_agent(score, n_rounds, board);
@@ -118,7 +118,7 @@ public class Game {
                 //System.out.println("Red Agent played:" + move);
                 //cli.print_game_info_for_players(board);
                 // System.out.println("-----------------------");
-                //action = move;
+                action = move;
 
                 //System.out.println("red Agent played:" + action);
             } else {

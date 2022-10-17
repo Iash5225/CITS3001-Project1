@@ -247,7 +247,9 @@ public class CLI {
             red_frequency[i] = r_frequency;
             blue_frequency[i] = b_frequency;
         }
+        System.out.print("\033[0;31m");
         System.out.println("RED distribution:");
+        System.out.print("\033[0m");
         for (int i = 0; i < red_frequency.length-1; i++) {
             String range = "Level " + String.format("%d", i) ;
             if(i==0){
@@ -257,7 +259,9 @@ public class CLI {
             print_bar(range, "\033[31m", red_frequency[i]);
         }
         System.out.println("\n");
+        System.out.print("\033[0;34m");
         System.out.println("BLUE distribution:");
+        System.out.print("\033[0m");
         for (int i = 0; i < blue_frequency.length; i++) {
             String range = "Level " + String.format("%d", i);
             if (i == 0) {
